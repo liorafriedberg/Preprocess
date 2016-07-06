@@ -1,4 +1,5 @@
 package FileIO;
+
 import javax.swing.JFileChooser;
 import java.io.*;
 import java.awt.*;
@@ -15,6 +16,9 @@ public class FileChooser extends JPanel implements ActionListener {
 	JButton inputButton1;
 	JButton inputButton2;
 	JButton saveButton;
+
+	File input1, input2, output = null;
+
 	JTextArea log;
 	JFileChooser fc;
 
@@ -35,13 +39,13 @@ public class FileChooser extends JPanel implements ActionListener {
 		// fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		// Create the open buttons.
-		inputButton1 = new JButton("Open SurveyGizmo Data File", createImageIcon("/images/Open16.gif"));
+		inputButton1 = new JButton("Open SurveyGizmo Data File", createImageIcon("src\\images\\Open16.gif"));
 		inputButton1.addActionListener(this);
-		inputButton2 = new JButton("Open MTurk Data File", createImageIcon("/images/Open16.gif"));
+		inputButton2 = new JButton("Open MTurk Data File", createImageIcon("src\\images\\Open16.gif"));
 		inputButton2.addActionListener(this);
 
 		// Create the save button.
-		saveButton = new JButton("Save Output File", createImageIcon("/images/Save16.gif"));
+		saveButton = new JButton("Select Output File", createImageIcon("src\\images\\Save16.gif"));
 		saveButton.addActionListener(this);
 
 		// For layout purposes, put the buttons in a separate panel
@@ -55,58 +59,60 @@ public class FileChooser extends JPanel implements ActionListener {
 		add(logScrollPane, BorderLayout.CENTER);
 	}
 
-	// TODO: change signature to return the file contents.
-	private void inputButton1Action(ActionEvent e) {
+	/**
+	 * Opens a GUI that allows a user to choose a file to open.
+	 * 
+	 * @return Returns a File object if the user-specified file was successfully
+	 *         opened. Null if not.
+	 */
+	private File inputButtonAction() {
 		int returnVal = fc.showOpenDialog(FileChooser.this);
+		File file = null;
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			// TODO: This is where we open the first file.
+			file = fc.getSelectedFile();
 			log.append("Opening: " + file.getName() + "." + newline);
+			if (!file.canRead()) {
+				log.append("Cannot open specified file for reading." + newline);
+				return null;
+			}
 		} else {
 			log.append("Open command cancelled by user." + newline);
 		}
 		log.setCaretPosition(log.getDocument().getLength());
+		return file;
 	}
 
-	// TODO: change signature to return the file contents.
-	private void inputButton2Action(ActionEvent e) {
-		int returnVal = fc.showOpenDialog(FileChooser.this);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			// TODO: This is where we open the first file.
-			log.append("Opening: " + file.getName() + "." + newline);
-		} else {
-			log.append("Open command cancelled by user." + newline);
-		}
-		log.setCaretPosition(log.getDocument().getLength());
-	}
-
-	private void saveButtonAction(ActionEvent e) {
+	private File saveButtonAction() {
 		int returnVal = fc.showSaveDialog(FileChooser.this);
+		File file = null;
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fc.getSelectedFile();
-			// TODO: This is where we save the file.
-			log.append("Saving: " + file.getName() + "." + newline);
+			file = fc.getSelectedFile();
+			log.append("Saving at: " + file.getName() + "." + newline);
+			if (!file.canWrite()) {
+				log.append("Couldn't save file - can't write to selected filename." + newline);
+				return null;
+			}
 		} else {
 			log.append("Save command cancelled by user." + newline);
 		}
 		log.setCaretPosition(log.getDocument().getLength());
+		return file;
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		// Handle open button actions.
 		if (e.getSource() == inputButton1) {
-			inputButton1Action(e);
+			input1 = inputButtonAction();
 
 		} else if (e.getSource() == inputButton2) {
-			inputButton2Action(e);
+			input2 = inputButtonAction();
 		}
 
 		else if (e.getSource() == saveButton) {
 			// Handle save button action.
-			saveButtonAction(e);
+			output = saveButtonAction();
 		}
 	}
 
