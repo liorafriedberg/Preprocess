@@ -13,38 +13,42 @@ public class AMTResultsFile {
 	private final List<String> headings = AMTHeadings();
 	private List<String> lines;
 	
-	public boolean write(File filename){
+	public Integer length(){
+		return lines.size();
+	}
+
+	public boolean write(File filename) {
 		try {
 			FileWriter out;
 			out = new FileWriter(filename);
-			//Write the header.
+			// Write the header.
 			out.write(String.join(",", this.headings) + "\n");
 			out.flush();
-			
-			//Write all lines.
-			for (String line : this.lines){
+
+			// Write all lines.
+			for (String line : this.lines) {
 				out.write(line + "\n");
 				out.flush();
 			}
-			
+
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
 
 	public AMTResultsFile() {
 		this.lines = new ArrayList<String>();
 	}
-	
+
 	public AMTResultsFile(List<String> lines) {
 		this.lines = lines;
 	}
-	
-	public String[] getLine(Integer line){
+
+	public String[] getLine(Integer line) {
 		return lines.get(line).split(",");
 	}
 
@@ -54,28 +58,29 @@ public class AMTResultsFile {
 
 	public void addLine(String line) {
 		String[] fields = line.split(",");
-		if (fields.length == 32){
+		if (fields.length >= 30 && fields.length <= 32) {
 			lines.add(line);
-		}else
-		{
+		} else {
 			System.err.println("Line does not conform to AMT results file schema.");
 		}
 	}
-	
-	public void replaceLine(Integer line, String text){
-		lines.add(line,text);
+
+	public void replaceLine(Integer line, String text) {
+		lines.add(line, text);
 	}
 
 	public static boolean validate(File filename) {
 		CSVFile toValidate = CSVFile.read(filename.toString());
-
+		System.err.println("Validating AMT Results File...");
 		if (StringUtils.stringArrayContainsAll(AMTResultsFile.AMTHeadings().toArray(new String[0]),
 				toValidate.getHeader())) {
+			System.err.println("Validation success.");
 			return true;
 		}
 
 		// If we got here, the header row is different, the file is corrupt, or
 		// not an AMT results file.
+		System.err.println("Validation failed.");
 		return false;
 	}
 

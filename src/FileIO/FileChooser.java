@@ -121,8 +121,9 @@ public class FileChooser extends JPanel implements ActionListener {
 		// Handle open button actions.
 		if (e.getSource() == inputButton1) {
 			File f = inputButtonAction();
-			
-			//TODO: do the same thing with validation that we did with the AMTResultsFile object.
+
+			// TODO: do the same thing with validation that we did with the
+			// AMTResultsFile object.
 			input1 = f;
 		} else if (e.getSource() == inputButton2) {
 			File f = inputButtonAction();
@@ -139,26 +140,29 @@ public class FileChooser extends JPanel implements ActionListener {
 	}
 
 	private void doProcessing() {
-		if ((input1 != null) && (input2 != null)) {			
+		//Input1: SurveyGizmo Results
+		//Input2: MTurk Results
+		//Output: Output to write to.
+		if ((input1 != null) && (input2 != null)) {
 			if (output != null) {
-				ResultsProcessor r = new ResultsProcessor(input1, input2, output);
+				ResultsProcessor r = new ResultsProcessor(input2, input1, output);
 
 				String[] results = r.process();
-				log.append("Processing complete."+ newline);
-				
+				log.append("Processing complete." + newline);
+
 				if (results.length > 0) {
-					log.append("Errors were found in the data."+ newline);
+					log.append("Errors were found in the data." + newline);
 					for (String line : results)
 						log.append(line);
 				} else {
-					log.append("No errors were found. All checks passed."+ newline);
+					log.append("No errors were found. All checks passed." + newline);
 				}
-				
+
 			} else {
-				log.append("Invalid output file specified, or output is not writeable."+ newline);
+				log.append("Invalid output file specified, or output is not writeable." + newline);
 			}
 		} else {
-			log.append("Invalid input file(s) specified, or input could not be read."+ newline);
+			log.append("Invalid input file(s) specified, or input could not be read." + newline);
 		}
 		log.setCaretPosition(log.getDocument().getLength());
 	}

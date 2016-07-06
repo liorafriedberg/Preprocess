@@ -41,7 +41,7 @@ public class CSVFile {
 		String[] column_names = lines.get(0).split(",");
 
 		for (String col : column_names) {
-			columns.add(col);
+			columns.add(col.replace("\"", ""));
 		}
 	}
 

@@ -51,40 +51,58 @@ public class ResultsProcessor {
 		List<String> logfileOutput = new ArrayList<String>();
 		List<ResultFlag> flags = new ArrayList<ResultFlag>();
 		AMTResultsFile outFileContents = new AMTResultsFile();
-		
-		//Pack all of the existing mturk data into our data structure.
+
+		// Pack all of the existing mturk data into our data structure.
 		for (String line : mturk_file.getAllLines())
 			outFileContents.addLine(line);
-		
+
 		flags = aggregateResults();
-		
+
 		for (ResultFlag results : flags) {
 			logfileOutput.add(results.toString());
-			
-			//For all errors that are present in the turk file...
-			if (results.filename == mturk_file.getFilename()){
-				//Grab the line from the mturk data, and set the reject flag (32nd column).
+
+			// For all errors that are present in the turk file...
+			if (results.filename == mturk_file.getFilename()) {
+				// Grab the line from the mturk data, and set the reject flag
+				// (32nd column) to the error message.
 				String[] fields = outFileContents.getLine(results.line);
-				fields[31] = "X";
-				
+				fields[31] = results.failureType;
+
 				StringBuilder builder = new StringBuilder();
-				for(String s : fields) {
-				    builder.append(s);
+				for (String s : fields) {
+					builder.append(s);
 				}
-				
+
 				outFileContents.replaceLine(results.line, builder.toString());
 			}
-			
+
+		}
+
+		// Approve the remaining HITs, they passed all our tests.
+		for (int i = 0; i < outFileContents.length() - 1; i++) {
+			String[] fields = outFileContents.getLine(i);
+			//if it's not been rejected, approve it.
+			if (fields[31] != "X") {
+				fields[30] = "X";
+			}
+			StringBuilder builder = new StringBuilder();
+			for (String s : fields) {
+				builder.append(s);
+			}
+
+			outFileContents.replaceLine(i, builder.toString());
 		}
 
 		outFileContents.write(outfile);
-		
+
 		return logfileOutput.toArray(new String[0]);
 	}
 
 	private List<ResultFlag> checkAttentionChecks() {
 		final String failType = "Attention Check";
 		ArrayList<ResultFlag> results = new ArrayList<ResultFlag>();
+
+		System.err.println("Running test: " + failType);
 
 		ArrayList<KeyValue<Integer, String>> checks = new ArrayList<KeyValue<Integer, String>>();
 		checks.add(new KeyValue<Integer, String>(1,
@@ -136,6 +154,7 @@ public class ResultsProcessor {
 			check_line.add(new KeyValue<String, Integer>(worker, line));
 		}
 
+		System.err.println("Running test: " + failType3);
 		// Build list of SurveyGizmo workers.
 		for (int line = 0; line >= surveygizmo_file.size(); line++) {
 			String worker = surveygizmo_file.getField("WorkerID", line);
@@ -154,6 +173,7 @@ public class ResultsProcessor {
 
 		// Now check if all the Turkers are in the list of SurveyGizmo workers
 		// (forged finalcode).
+		System.err.println("Running test: " + failType2);
 		for (int line = 0; line >= mturk_file.size(); line++) {
 			String worker = mturk_file.getField("WorkerId", line);
 
@@ -164,6 +184,7 @@ public class ResultsProcessor {
 			}
 		}
 
+		System.err.println("Running test: " + failType1);
 		// Now check that the finalcodes for each workerid match across both
 		// files.
 		for (KeyValue<String, String> turker : checks1) {
@@ -196,6 +217,7 @@ public class ResultsProcessor {
 		Set<String> turkers = new HashSet<String>();
 		Set<String> sg_workers = new HashSet<String>();
 
+		System.err.println("Running test: " + failType1);
 		// Check the AMT worker IDs for duplicates.
 		for (int line = 0; line >= mturk_file.size(); line++) {
 			String worker = mturk_file.getField("WorkerId", line);
@@ -207,6 +229,7 @@ public class ResultsProcessor {
 			}
 		}
 
+		System.err.println("Running test: " + failType2);
 		// Check the surveygizmo worker IDs for duplicates.
 		for (int line = 0; line >= surveygizmo_file.size(); line++) {
 			String worker = surveygizmo_file.getField("WorkerID", line);
@@ -235,6 +258,7 @@ public class ResultsProcessor {
 
 	private List<ResultFlag> checkCompletionStatus() {
 		final String failType1 = "Survey Incomplete";
+		System.err.println("Running test: " + failType1);
 		ArrayList<ResultFlag> results = new ArrayList<ResultFlag>();
 
 		for (int line = 0; line >= surveygizmo_file.size(); line++) {
