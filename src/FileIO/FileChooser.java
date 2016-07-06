@@ -1,6 +1,9 @@
-package FileIO;
+package fileIO;
 
 import javax.swing.JFileChooser;
+
+import processing.ResultsProcessor;
+
 import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +19,7 @@ public class FileChooser extends JPanel implements ActionListener {
 	JButton inputButton1;
 	JButton inputButton2;
 	JButton saveButton;
+	JButton goButton;
 
 	File input1, input2, output = null;
 
@@ -39,20 +43,25 @@ public class FileChooser extends JPanel implements ActionListener {
 		// fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
 		// Create the open buttons.
-		inputButton1 = new JButton("Open SurveyGizmo Data File", createImageIcon("src\\images\\Open16.gif"));
+		inputButton1 = new JButton("Open SurveyGizmo Data File", createImageIcon("/images/Open16.gif"));
 		inputButton1.addActionListener(this);
-		inputButton2 = new JButton("Open MTurk Data File", createImageIcon("src\\images\\Open16.gif"));
+		inputButton2 = new JButton("Open MTurk Data File", createImageIcon("/images/Open16.gif"));
 		inputButton2.addActionListener(this);
 
 		// Create the save button.
-		saveButton = new JButton("Select Output File", createImageIcon("src\\images\\Save16.gif"));
+		saveButton = new JButton("Select Output File", createImageIcon("/images/Save16.gif"));
 		saveButton.addActionListener(this);
+
+		// Create the go button.
+		goButton = new JButton("Process", createImageIcon("/images/Go16.gif"));
+		goButton.addActionListener(this);
 
 		// For layout purposes, put the buttons in a separate panel
 		JPanel buttonPanel = new JPanel(); // use FlowLayout
 		buttonPanel.add(inputButton1);
 		buttonPanel.add(inputButton2);
 		buttonPanel.add(saveButton);
+		buttonPanel.add(goButton);
 
 		// Add the buttons and the log to this panel.
 		add(buttonPanel, BorderLayout.PAGE_START);
@@ -90,10 +99,17 @@ public class FileChooser extends JPanel implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = fc.getSelectedFile();
 			log.append("Saving at: " + file.getName() + "." + newline);
-			if (!file.canWrite()) {
-				log.append("Couldn't save file - can't write to selected filename." + newline);
-				return null;
+
+			try {
+				if (!file.createNewFile() && !file.canWrite()) {
+					log.append("Couldn't save file - can't write to selected file." + newline);
+					return null;
+				}
+			} catch (IOException e) {
+				log.append("Couldn't save file - I/O error." + newline);
+				e.printStackTrace();
 			}
+
 		} else {
 			log.append("Save command cancelled by user." + newline);
 		}
@@ -104,16 +120,47 @@ public class FileChooser extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// Handle open button actions.
 		if (e.getSource() == inputButton1) {
-			input1 = inputButtonAction();
-
+			File f = inputButtonAction();
+			
+			//TODO: do the same thing with validation that we did with the AMTResultsFile object.
+			input1 = f;
 		} else if (e.getSource() == inputButton2) {
-			input2 = inputButtonAction();
+			File f = inputButtonAction();
+			input2 = (AMTResultsFile.validate(f)) ? f : null;
 		}
-
+		// Handle save button action.
 		else if (e.getSource() == saveButton) {
-			// Handle save button action.
 			output = saveButtonAction();
 		}
+		// Handle go button action.
+		else if (e.getSource() == goButton) {
+			doProcessing();
+		}
+	}
+
+	private void doProcessing() {
+		if ((input1 != null) && (input2 != null)) {			
+			if (output != null) {
+				ResultsProcessor r = new ResultsProcessor(input1, input2, output);
+
+				String[] results = r.process();
+				log.append("Processing complete."+ newline);
+				
+				if (results.length > 0) {
+					log.append("Errors were found in the data."+ newline);
+					for (String line : results)
+						log.append(line);
+				} else {
+					log.append("No errors were found. All checks passed."+ newline);
+				}
+				
+			} else {
+				log.append("Invalid output file specified, or output is not writeable."+ newline);
+			}
+		} else {
+			log.append("Invalid input file(s) specified, or input could not be read."+ newline);
+		}
+		log.setCaretPosition(log.getDocument().getLength());
 	}
 
 	protected static ImageIcon createImageIcon(String path) {

@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-import FileIO.FileChooser;
+import fileIO.FileChooser;
 
 public class ResultsProcessorGUIDriver {
 	

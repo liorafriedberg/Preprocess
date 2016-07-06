@@ -1,7 +1,7 @@
 import java.io.IOException;
 
-import FileIO.CSVFile;
-import FileIO.RiskSurveyPrettyPrinter;
+import fileIO.CSVFile;
+import processing.RiskSurveyPrettyPrinter;
 
 public class RiskSurveyAnalyzerDriver {
 	
