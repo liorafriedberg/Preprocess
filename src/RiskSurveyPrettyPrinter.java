@@ -1,15 +1,15 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.TreeMap;
+
+import FileIO.CSVFile;
 
 //30 April 2016 - risk survey with 3 harms
 
-public class RiskSurvey3 {
+public class RiskSurveyPrettyPrinter {
 	public static TreeMap<String,Float>score1=new TreeMap<String,Float>();
 	public static TreeMap<String,Float>score2=new TreeMap<String,Float>();
 	public static TreeMap<String,String>Wcity=new TreeMap<String,String>();
