@@ -165,7 +165,7 @@ public class ResultsProcessor {
 			// (invalid referral).
 			if (!turkers.contains(worker)) {
 				// We found a worker that didn't get here through MTurk.
-				results.add(new ResultFlag(worker, line + 2, failType3, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line, failType3, surveygizmo_file.getFilename()));
 			}
 
 			sg_workers.add(worker);
@@ -181,7 +181,7 @@ public class ResultsProcessor {
 			if (!sg_workers.contains(worker)) {
 				// We found a worker that never got a surveycode from the
 				// survey, so it must be forged.
-				results.add(new ResultFlag(worker, line + 2, failType2, mturk_file.getFilename()));
+				results.add(new ResultFlag(worker, line, failType2, mturk_file.getFilename()));
 			}
 		}
 
@@ -200,7 +200,7 @@ public class ResultsProcessor {
 						for (KeyValue<String, Integer> turker_line : check_line)
 							if (turker_line.getKey() == turker.getKey()) {
 								Integer line = turker_line.getValue();
-								results.add(new ResultFlag(turker.getKey(), line + 2, failType1, mturk_file.getFilename()));
+								results.add(new ResultFlag(turker.getKey(), line, failType1, mturk_file.getFilename()));
 							}
 					}
 				}
@@ -224,7 +224,7 @@ public class ResultsProcessor {
 			String worker = mturk_file.getField("WorkerId", line);
 
 			if (turkers.contains(worker)) {
-				results.add(new ResultFlag(worker, line + 2, failType1, mturk_file.getFilename()));
+				results.add(new ResultFlag(worker, line, failType1, mturk_file.getFilename()));
 			} else {
 				turkers.add(worker);
 			}
@@ -236,7 +236,7 @@ public class ResultsProcessor {
 			String worker = surveygizmo_file.getField("WorkerID", line);
 
 			if (sg_workers.contains(worker)) {
-				results.add(new ResultFlag(worker, line + 2, failType2, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line, failType2, surveygizmo_file.getFilename()));
 			} else {
 				sg_workers.add(worker);
 			}
@@ -267,7 +267,7 @@ public class ResultsProcessor {
 			String status = surveygizmo_file.getField("Status", line);
 
 			if (status.contains("Partial")) {
-				results.add(new ResultFlag(worker, line + 2, failType1, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line, failType1, surveygizmo_file.getFilename()));
 			}
 		}
 
