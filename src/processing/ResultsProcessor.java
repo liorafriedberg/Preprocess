@@ -262,7 +262,7 @@ public class ResultsProcessor {
 		System.err.println("Running test: " + failType1);
 		ArrayList<ResultFlag> results = new ArrayList<ResultFlag>();
 
-		for (int line = 0; line >= surveygizmo_file.size(); line++) {
+		for (int line = 0; line < surveygizmo_file.size(); line++) {
 			String worker = surveygizmo_file.getField("WorkerID", line);
 			String status = surveygizmo_file.getField("Status", line);
 
