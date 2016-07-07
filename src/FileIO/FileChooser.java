@@ -153,7 +153,7 @@ public class FileChooser extends JPanel implements ActionListener {
 				if (results.length > 0) {
 					log.append("Errors were found in the data." + newline);
 					for (String line : results)
-						log.append(line);
+						log.append(line + newline);
 				} else {
 					log.append("No errors were found. All checks passed." + newline);
 				}

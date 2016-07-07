@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import fileIO.AMTResultsFile;
 import fileIO.CSVFile;
 
@@ -53,7 +52,7 @@ public class ResultsProcessor {
 		AMTResultsFile outFileContents = new AMTResultsFile();
 
 		// Pack all of the existing mturk data into our data structure.
-		for (String line : mturk_file.getAllLines())
+		for (String[] line : mturk_file.getAllLines())
 			outFileContents.addLine(line);
 
 		flags = aggregateResults();
@@ -63,34 +62,36 @@ public class ResultsProcessor {
 
 			// For all errors that are present in the turk file...
 			if (results.filename == mturk_file.getFilename()) {
-				// Grab the line from the mturk data, and set the reject flag
-				// (32nd column) to the error message.
-				String[] fields = outFileContents.getLine(results.line);
-				fields[31] = results.failureType;
+				ArrayList<String> lineFields = new ArrayList<String>();
 
-				StringBuilder builder = new StringBuilder();
-				for (String s : fields) {
-					builder.append(s);
+				// Reconstruct the line from the mturk data, and set the reject
+				// flag
+				for (String data : outFileContents.getLine(results.line)) {
+					lineFields.add(data);
 				}
-
-				outFileContents.replaceLine(results.line, builder.toString());
+				// 31st field is "Reject".
+				lineFields.set(31, "X " + results.failureType);
+				// Build and replace the line in the file.
+				outFileContents.replaceLine(results.line, lineFields.toArray(new String[0]));
 			}
 
 		}
 
 		// Approve the remaining HITs, they passed all our tests.
-		for (int i = 0; i < outFileContents.length() - 1; i++) {
-			String[] fields = outFileContents.getLine(i);
-			//if it's not been rejected, approve it.
-			if (fields[31] != "X") {
-				fields[30] = "X";
-			}
-			StringBuilder builder = new StringBuilder();
-			for (String s : fields) {
-				builder.append(s);
-			}
+		int numLines = outFileContents.length();
 
-			outFileContents.replaceLine(i, builder.toString());
+		for (int i = 0; i < numLines; i++) {
+			ArrayList<String> lineFields = new ArrayList<String>();
+
+			for (String data : outFileContents.getLine(i)) {
+				lineFields.add(data);
+			}
+			// If it hasn't been rejected, flag it for a pass.
+			if (lineFields.get(31) != "X") {
+				lineFields.set(30, "X");
+			}
+			// Build and replace the line in the file if we modified it.
+			outFileContents.replaceLine(i, lineFields.toArray(new String[0]));
 		}
 
 		outFileContents.write(outfile);
@@ -143,7 +144,7 @@ public class ResultsProcessor {
 		Set<String> sg_workers = new HashSet<String>();
 
 		// Build list of AMT workers.
-		for (int line = 0; line >= mturk_file.size(); line++) {
+		for (int line = 0; line < mturk_file.size(); line++) {
 			String worker = mturk_file.getField("WorkerId", line);
 			String finalcode = mturk_file.getField("Answer.surveycode", line);
 
@@ -156,7 +157,7 @@ public class ResultsProcessor {
 
 		System.err.println("Running test: " + failType3);
 		// Build list of SurveyGizmo workers.
-		for (int line = 0; line >= surveygizmo_file.size(); line++) {
+		for (int line = 0; line < surveygizmo_file.size(); line++) {
 			String worker = surveygizmo_file.getField("WorkerID", line);
 			String finalcode = surveygizmo_file.getField("FinalCode", line);
 
@@ -164,7 +165,7 @@ public class ResultsProcessor {
 			// (invalid referral).
 			if (!turkers.contains(worker)) {
 				// We found a worker that didn't get here through MTurk.
-				results.add(new ResultFlag(worker, line, failType3, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line + 2, failType3, surveygizmo_file.getFilename()));
 			}
 
 			sg_workers.add(worker);
@@ -174,13 +175,13 @@ public class ResultsProcessor {
 		// Now check if all the Turkers are in the list of SurveyGizmo workers
 		// (forged finalcode).
 		System.err.println("Running test: " + failType2);
-		for (int line = 0; line >= mturk_file.size(); line++) {
+		for (int line = 0; line < mturk_file.size(); line++) {
 			String worker = mturk_file.getField("WorkerId", line);
 
 			if (!sg_workers.contains(worker)) {
 				// We found a worker that never got a surveycode from the
 				// survey, so it must be forged.
-				results.add(new ResultFlag(worker, line, failType2, mturk_file.getFilename()));
+				results.add(new ResultFlag(worker, line + 2, failType2, mturk_file.getFilename()));
 			}
 		}
 
@@ -199,7 +200,7 @@ public class ResultsProcessor {
 						for (KeyValue<String, Integer> turker_line : check_line)
 							if (turker_line.getKey() == turker.getKey()) {
 								Integer line = turker_line.getValue();
-								results.add(new ResultFlag(turker.getKey(), line, failType1, mturk_file.getFilename()));
+								results.add(new ResultFlag(turker.getKey(), line + 2, failType1, mturk_file.getFilename()));
 							}
 					}
 				}
@@ -219,11 +220,11 @@ public class ResultsProcessor {
 
 		System.err.println("Running test: " + failType1);
 		// Check the AMT worker IDs for duplicates.
-		for (int line = 0; line >= mturk_file.size(); line++) {
+		for (int line = 0; line < mturk_file.size(); line++) {
 			String worker = mturk_file.getField("WorkerId", line);
 
 			if (turkers.contains(worker)) {
-				results.add(new ResultFlag(worker, line, failType1, mturk_file.getFilename()));
+				results.add(new ResultFlag(worker, line + 2, failType1, mturk_file.getFilename()));
 			} else {
 				turkers.add(worker);
 			}
@@ -231,11 +232,11 @@ public class ResultsProcessor {
 
 		System.err.println("Running test: " + failType2);
 		// Check the surveygizmo worker IDs for duplicates.
-		for (int line = 0; line >= surveygizmo_file.size(); line++) {
+		for (int line = 0; line < surveygizmo_file.size(); line++) {
 			String worker = surveygizmo_file.getField("WorkerID", line);
 
 			if (sg_workers.contains(worker)) {
-				results.add(new ResultFlag(worker, line, failType2, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line + 2, failType2, surveygizmo_file.getFilename()));
 			} else {
 				sg_workers.add(worker);
 			}
@@ -266,7 +267,7 @@ public class ResultsProcessor {
 			String status = surveygizmo_file.getField("Status", line);
 
 			if (status.contains("Partial")) {
-				results.add(new ResultFlag(worker, line, failType1, surveygizmo_file.getFilename()));
+				results.add(new ResultFlag(worker, line + 2, failType1, surveygizmo_file.getFilename()));
 			}
 		}
 

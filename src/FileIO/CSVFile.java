@@ -2,19 +2,19 @@ package fileIO;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.MalformedInputException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.opencsv.CSVReader;
 
 public class CSVFile {
 
 	private List<String> columns;
 	private File myFile;
-	private List<String> lines;
+	private List<String[]> lines;
 
 	/**
 	 * Private constructor. Loads the contents of the CSV file into memory, and
@@ -30,19 +30,25 @@ public class CSVFile {
 	private CSVFile(String filename) throws IOException, FileNotFoundException {
 		columns = new ArrayList<String>();
 		myFile = new File(filename);
-		lines = new ArrayList<String>();
+		lines = new ArrayList<String[]>();
 
-		try {
-			lines.addAll(Files.readAllLines(myFile.toPath(), StandardCharsets.ISO_8859_1));
-		} catch (MalformedInputException e) {
-			System.err.println("Double check the character encoding for the input file.");
+		CSVReader reader = new CSVReader(new FileReader(filename));
+		String[] nextLine;
+
+		while ((nextLine = reader.readNext()) != null) {
+			// nextLine[] is an array of values from the line
+			lines.add(nextLine);
 		}
 
-		String[] column_names = lines.get(0).split(",");
+		String[] column_names = lines.get(0);
 
 		for (String col : column_names) {
-			columns.add(col.replace("\"", ""));
+			columns.add(col);
 		}
+
+		// Remove the header row from the lines.
+		lines.remove(0);
+		reader.close();
 	}
 
 	/**
@@ -67,27 +73,28 @@ public class CSVFile {
 		// If we failed to read the file, returns null.
 		return null;
 	}
-	
-	public static boolean write(List<String> header, List<String> lines, File filename){
+
+	public static boolean write(List<String> header, List<String> lines, File filename) {
+		//TODO: pull this method from AMTResultsFile
 		try {
 			FileWriter out;
 			out = new FileWriter(filename);
-			//Write the header.
+			// Write the header.
 			out.write(String.join(",", header) + "\n");
 			out.flush();
-			
-			//Write all lines.
-			for (String line : lines){
+
+			// Write all lines.
+			for (String line : lines) {
 				out.write(line + "\n");
 				out.flush();
 			}
-			
+
 			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -96,8 +103,7 @@ public class CSVFile {
 	 *         minus the header row).
 	 */
 	public int size() {
-		// Remove 1, because we don't count the header row.
-		return lines.size() - 1;
+		return lines.size();
 	}
 
 	public String getFilename() {
@@ -107,23 +113,22 @@ public class CSVFile {
 	public String[] getHeader() {
 		return columns.toArray(new String[0]);
 	}
-	
-	public String getLine(int line){
+
+	public String[] getLine(int line) {
 		return lines.get(line);
 	}
-	
-	public String[] getAllLines(){
-		List<String> linesCopy = new ArrayList<String>();
-		linesCopy.addAll(lines);
-		linesCopy.remove(0);
-		return linesCopy.toArray(new String[0]);
+
+	public List<String[]> getAllLines() {
+		return lines;
 	}
 
 	/**
 	 * @param column_name
 	 *            The name of the column you want to retrieve. Column names are
 	 *            specified in the header row of the CSV file. Only the first
-	 *            instance of the column name specified will be returned.
+	 *            instance of the column name specified will be returned. Column
+	 *            names need not be surrounded with quotes, a regular string
+	 *            will do.
 	 * @param row_number
 	 *            Row number that you want to retrieve. Zero indexed (0
 	 *            represents the first row of values, not the row header).
@@ -136,13 +141,9 @@ public class CSVFile {
 		if (whichColumn == -1)
 			return null;
 
-		// Add one to skip the header row.
 		String value;
-		try {
-			value = lines.get(row_number + 1).split(",")[whichColumn];
-		} catch (Exception e) {
-			value = null;
-		}
+
+		value = lines.get(row_number)[whichColumn];
 
 		return value;
 	}

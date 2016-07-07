@@ -6,32 +6,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.opencsv.CSVWriter;
+
 import processing.StringUtils;
 
 public class AMTResultsFile {
 
 	private final List<String> headings = AMTHeadings();
-	private List<String> lines;
-	
-	public Integer length(){
+	private List<String[]> lines;
+
+	public int length() {
 		return lines.size();
 	}
 
 	public boolean write(File filename) {
 		try {
-			FileWriter out;
-			out = new FileWriter(filename);
+			CSVWriter writer = new CSVWriter(new FileWriter(filename), ',');
 			// Write the header.
-			out.write(String.join(",", this.headings) + "\n");
-			out.flush();
+			String[] header = this.headings.toArray(new String[0]);
+			writer.writeNext(header);
 
 			// Write all lines.
-			for (String line : this.lines) {
-				out.write(line + "\n");
-				out.flush();
+			for (String[] line : this.lines) {
+				writer.writeNext(line);
 			}
 
-			out.close();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -41,32 +41,45 @@ public class AMTResultsFile {
 	}
 
 	public AMTResultsFile() {
-		this.lines = new ArrayList<String>();
+		this.lines = new ArrayList<String[]>();
 	}
 
-	public AMTResultsFile(List<String> lines) {
+	public AMTResultsFile(List<String[]> lines) {
 		this.lines = lines;
 	}
 
 	public String[] getLine(Integer line) {
-		return lines.get(line).split(",");
+		String[] outLine = this.lines.get(line);
+		ArrayList<String> l = new ArrayList<String>();
+		for (String s : outLine){
+			l.add(s);
+		}
+		//If the line has less than 32 entries, pad it with blank entries on the right.
+		while(l.size() < 32){
+			l.add("");
+		}
+		
+		return l.toArray(new String[0]);
 	}
 
-	public List<String> getAllLines() {
+	public List<String[]> getAllLines() {
 		return lines;
 	}
 
-	public void addLine(String line) {
-		String[] fields = line.split(",");
-		if (fields.length >= 30 && fields.length <= 32) {
+	public void addLine(String[] line) {
+		if (line.length >= 30 && line.length <= 32) {
 			lines.add(line);
 		} else {
 			System.err.println("Line does not conform to AMT results file schema.");
 		}
 	}
 
-	public void replaceLine(Integer line, String text) {
-		lines.add(line, text);
+	public void replaceLine(Integer line, String[] data) {
+		if (line > lines.size() - 1) {
+			throw new IndexOutOfBoundsException();
+		}
+		lines.add(line, data);
+		lines.remove(line + 1);
 	}
 
 	public static boolean validate(File filename) {
