@@ -117,7 +117,7 @@ public class ResultsProcessor {
 		checks.add(new KeyValue<Integer, String>(5,
 				"The event affects only one person in your country:The above proximities are presented in random order below. Please rank them based on the order above (this is an attention test)."));
 
-		for (int line = 0; line >= surveygizmo_file.size(); line++) {
+		for (int line = 0; line < surveygizmo_file.size(); line++) {
 			for (KeyValue<Integer, String> whichCheck : checks) {
 				if (surveygizmo_file.getField(whichCheck.getValue(), line) != Integer.toString(whichCheck.getKey())) {
 					String worker = surveygizmo_file.getField("WorkerID", line);
