@@ -15,7 +15,8 @@ public class ResultFlag {
 	}
 	
 	public String toString(){
-		return "ERROR in " + filename.toString() + ": " + workerID + " failed check: " + failureType + " line#" + line + 2;
+		String line_num = Integer.toString(line + 2);
+		return "ERROR in " + filename.toString() + ": " + workerID + " failed check: " + failureType + " line#" + line_num;
 		
 	}
 
