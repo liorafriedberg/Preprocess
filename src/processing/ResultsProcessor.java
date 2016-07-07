@@ -71,6 +71,8 @@ public class ResultsProcessor {
 				}
 				// 31st field is "Reject".
 				lineFields.set(31, "X " + results.failureType);
+				// 30th field is "Approve"
+				lineFields.set(30, "");
 				// Build and replace the line in the file.
 				outFileContents.replaceLine(results.line, lineFields.toArray(new String[0]));
 			}
@@ -87,7 +89,7 @@ public class ResultsProcessor {
 				lineFields.add(data);
 			}
 			// If it hasn't been rejected, flag it for a pass.
-			if (lineFields.get(31) != "X") {
+			if (!lineFields.get(31).contains("X")) {
 				lineFields.set(30, "X");
 			}
 			// Build and replace the line in the file if we modified it.
