@@ -641,51 +641,52 @@ public class RiskSurveyPrettyPrinter {
 			String deathScore= "";
 			String terrorismScore= "";
 			
-			String q1 = "[question(\"value\"), id=\"834\"] (most beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q2 = "[question(\"value\"), id=\"839\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q3 = "[question(\"value\"), id=\"840\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q4 = "[question(\"value\"), id=\"841\"] (least beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
+			String[] q1 = {"[question(\"value\"), id=\"834\"]"};
+			String[] q2 = {"[question(\"value\"), id=\"839\"]"};
+			String[] q3 = {"[question(\"value\"), id=\"840\"]"};
+			String[] q4 = {"[question(\"value\"), id=\"841\"]"};
 			
-			first = results.getField("Please choose the most beneficial purpose for sharing your information.", row);
-			second = results.getField("Please choose the second most beneficial purpose for sharing your information.", row);
-			third = results.getField("Please choose the third most beneficial purpose for sharing your information.", row);
-			fourth = results.getField("Please choose the least beneficial purpose for sharing your information.", row);
 			
-			if (first == "investigating imminent threat of death or harm to an individual, including children"){
+			first = results.getField(new String[] {"Please choose the most"}, row);
+			second = results.getField(new String[] {"Please choose the second"}, row);
+			third = results.getField(new String[] {"Please choose the third"}, row);
+			fourth = results.getField(new String[] {"Please choose the least"}, row);
+			
+			if (first.contains("investigating imminent threat of death or harm to an individual, including children")){
 				deathScore = results.getField(q1, row);
-			}else if (first == "investigating economic harm, fraud or identity theft"){
+			}else if (first.contains("investigating economic harm, fraud or identity theft")){
 				economicScore = results.getField(q1, row);
-			}else if (first == "investigating intellectual property and trade secrets"){
+			}else if (first.contains("investigating intellectual property and trade secrets")){
 				intellectualScore = results.getField(q1, row);
 			}else{
 				terrorismScore = results.getField(q1, row);
 			}
 				
-			if (second == "investigating imminent threat of death or harm to an individual, including children"){
+			if (second.contains("investigating imminent threat of death or harm to an individual, including children")){
 				deathScore = results.getField(q2, row);
-			}else if (second == "investigating economic harm, fraud or identity theft"){
+			}else if (second.contains("investigating economic harm, fraud or identity theft")){
 				economicScore = results.getField(q2, row);
-			}else if (second == "investigating intellectual property and trade secrets"){
+			}else if (second.contains("investigating intellectual property and trade secrets")){
 				intellectualScore = results.getField(q2, row);
 			}else{
 				terrorismScore = results.getField(q2, row);
 			}
 	
-			if (third == "investigating imminent threat of death or harm to an individual, including children"){
+			if (third.contains("investigating imminent threat of death or harm to an individual, including children")){
 				deathScore = results.getField(q3, row);
-			}else if (third == "investigating economic harm, fraud or identity theft"){
+			}else if (third.contains("investigating economic harm, fraud or identity theft")){
 				economicScore = results.getField(q3, row);
-			}else if (third == "investigating intellectual property and trade secrets"){
+			}else if (third.contains("investigating intellectual property and trade secrets")){
 				intellectualScore = results.getField(q3, row);
 			}else{
 				terrorismScore = results.getField(q3, row);
 			}
 			
-			if (fourth == "investigating imminent threat of death or harm to an individual, including children"){
+			if (fourth.contains("investigating imminent threat of death or harm to an individual, including children")){
 				deathScore = results.getField(q4, row);
-			}else if (fourth == "investigating economic harm, fraud or identity theft"){
+			}else if (fourth.contains("investigating economic harm, fraud or identity theft")){
 				economicScore = results.getField(q4, row);
-			}else if (fourth == "investigating intellectual property and trade secrets"){
+			}else if (fourth.contains("investigating intellectual property and trade secrets")){
 				intellectualScore = results.getField(q4, row);
 			}else{
 				terrorismScore = results.getField(q4, row);
