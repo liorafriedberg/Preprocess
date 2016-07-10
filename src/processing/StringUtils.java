@@ -23,6 +23,20 @@ public class StringUtils {
 		return true;
 	}
 
+	public static int findWhichStringContainsSubstrings(String[] strings, String[] substrings) {
+		for (int i = 0; i < strings.length; i++) {
+			boolean foundIt = true;
+			for (int ssi = 0; ssi < substrings.length; ssi++) {
+				if (!(strings[i].indexOf(substrings[ssi]) > -1)) {
+					foundIt = false;
+				}
+			}
+			if (foundIt)
+				return i;
+		}
+		return -1;
+	}
+
 	/**
 	 * stringArrayContains - check if a given string is present in a collection
 	 * of strings.

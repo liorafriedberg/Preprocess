@@ -284,9 +284,9 @@ public class RiskSurveyPrettyPrinter {
 
 			// City
 			// Name of the column in survey gizmo data
-			s = results.getField("How would you describe your city, based on its population?Â ", row);
+			s = results.getField("How would you describe your city, based on its population?", row);
 			Wcity.put(results.getField("WorkerID", row),
-					results.getField("How would you describe your city, based on its population?Â ", row));
+					results.getField("How would you describe your city, based on its population?", row));
 			if (city.containsKey(s)) {
 				temp = city.get(s);
 				city.remove(s);
@@ -312,7 +312,7 @@ public class RiskSurveyPrettyPrinter {
 			}
 
 			// workplace interact - added
-			s = results.getField("How many people do you personally know or interact with at your workplace? Â ", row);
+			s = results.getField("How many people do you personally know or interact with at your workplace? ", row);
 			WworkplaceInteract.put(results.getField("WorkerID", row), s); // more
 																			// eff?
 			if (wpInteract.containsKey(s)) {
@@ -641,15 +641,15 @@ public class RiskSurveyPrettyPrinter {
 			String deathScore= "";
 			String terrorismScore= "";
 			
-			String q1 = "[question(\"value\"), id=\"834\"] (most beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the â€œamount of benefitâ€ that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit.Â You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q2 = "[question(\"value\"), id=\"839\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the â€œamount of benefitâ€ that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit.Â You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q3 = "[question(\"value\"), id=\"840\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the â€œamount of benefitâ€ that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit.Â You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
-			String q4 = "[question(\"value\"), id=\"841\"] (least beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the â€œamount of benefitâ€ that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit.Â You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
+			String q1 = "[question(\"value\"), id=\"834\"] (most beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
+			String q2 = "[question(\"value\"), id=\"839\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
+			String q3 = "[question(\"value\"), id=\"840\"]:This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
+			String q4 = "[question(\"value\"), id=\"841\"] (least beneficial):This survey will ask you to estimate your willingness to share your personal information in the presence of a privacy risk while assisting the Federal Government in a cyber security investigation. We present the purposes that you previously ranked in the order from least to most beneficial. Please score each purpose based on the amount of benefit that purpose provides society. Begin by assigning the lowest benefit purpose with a score of 10, and then adjust by scoring the next highest purpose relative to the last scored purpose. For example, if you score the lowest benefit as 10 and the next highest benefit as 20, then that means the purpose with next highest benefit is twice as beneficial as the purpose with the lowest benefit. You may readjust any of your scores to ensure that the relative distances between scores match your overall expectations.";
 			
 			first = results.getField("Please choose the most beneficial purpose for sharing your information.", row);
-			second = results.getField("Please choose the secondÂ most beneficial purpose for sharing your information.", row);
-			third = results.getField("Please choose the thirdÂ most beneficial purpose for sharing your information.", row);
-			fourth = results.getField("Please choose the leastÂ beneficial purpose for sharing your information.", row);
+			second = results.getField("Please choose the second most beneficial purpose for sharing your information.", row);
+			third = results.getField("Please choose the third most beneficial purpose for sharing your information.", row);
+			fourth = results.getField("Please choose the least beneficial purpose for sharing your information.", row);
 			
 			if (first == "investigating imminent threat of death or harm to an individual, including children"){
 				deathScore = results.getField(q1, row);
@@ -706,15 +706,15 @@ public class RiskSurveyPrettyPrinter {
 					+ economicScore + "," + intellectualScore + ","
 					+ deathScore + "," + terrorismScore;
 			
-			String qp1 = ":You were informed by your workplace IT department that yourÂ [question(\"value\"), id=\"391\"]Â was compromised by a cyber attack that allowed an attacker to gain unauthorized access to your employer's internal network.Â   Please rate your willingness to share yourÂ information belowÂ with the Federal government for theÂ purpose ofÂ [question(\"value\"), id=\"431\"]â€‹, given the following risk.  Risk: In the last 6 months, while using this website, onlyÂ [question(\"value\"), id=\"118\"]â€‹Â experienced aÂ privacy violation due to governmentÂ surveillance.  When choosing your rating for the information types below, consider the [question(\"value\"), id=\"391\"],Â purpose and the risk, above.  You can hover over items in the left-hand column to view a brief description.";
-			String qp2 = ":You were informed by your workplace IT department that yourÂ [question(\"value\"), id=\"391\"]Â was compromised by a cyber attack that allowed an attacker to gain unauthorized access to your employer's internal network.Â   Please rate your willingness to share yourÂ information belowÂ with the Federal government for theÂ purpose ofÂ [question(\"value\"), id=\"432\"]â€‹, given the following risk.  Risk: In the last 6 months, while using this website, onlyÂ [question(\"value\"), id=\"118\"]â€‹Â experienced aÂ privacy violation due to governmentÂ surveillance.  When choosing your rating for the information types below, consider the [question(\"value\"), id=\"391\"],Â purpose and the risk, above.  You can hover over items in the left-hand column to view a brief description.";
-			String qp3 = ":You were informed by your workplace IT department that yourÂ [question(\"value\"), id=\"391\"]Â was compromised by a cyber attack that allowed an attacker to gain unauthorized access to your employer's internal network.Â   Please rate your willingness to share yourÂ information belowÂ with the Federal government for theÂ purpose ofÂ [question(\"value\"), id=\"433\"], given the following risk.  Risk: In the last 6 months, while using this website, onlyÂ [question(\"value\"), id=\"118\"]â€‹Â experienced aÂ privacy violation due to governmentÂ surveillance.  When choosing your rating for the information types below, consider the [question(\"value\"), id=\"391\"],Â purpose and the risk, above.  You can hover over items in the left-hand column to view a brief description."; 
-			String qp4 = ":You were informed by your workplace IT department that yourÂ [question(\"value\"), id=\"391\"]Â was compromised by a cyber attack that allowed an attacker to gain unauthorized access to your employer's internal network.Â   Please rate your willingness to share yourÂ information belowÂ with the Federal government for theÂ purpose ofÂ [question(\"value\"), id=\"434\"]â€‹, given the following risk.  Risk: In the last 6 months, while using this website, onlyÂ [question(\"value\"), id=\"118\"]â€‹Â experienced aÂ privacy violation due to governmentÂ surveillance.  When choosing your rating for the information types below, consider the [question(\"value\"), id=\"391\"],Â purpose and the risk, above.  You can hover over items in the left-hand column to view a brief description.";
+			String qp1 = "[question(\"value\"), id=\"431\"]";
+			String qp2 = "[question(\"value\"), id=\"432\"]";
+			String qp3 = "[question(\"value\"), id=\"433\"]"; 
+			String qp4 = "[question(\"value\"), id=\"434\"]";
 			
-			String AgeRangeP1 = "Age Range" + qp1;
-			String AgeRangeP2 = "Age Range" + qp2;
-			String AgeRangeP3 = "Age Range" + qp3;
-			String AgeRangeP4 = "Age Range" + qp4;
+			String[] AgeRangeP1 = {"Age Range" , qp1};
+			String[] AgeRangeP2 = {"Age Range" , qp2};
+			String[] AgeRangeP3 = {"Age Range" , qp3};
+			String[] AgeRangeP4 = {"Age Range" , qp4};
 
 			String ID1 = s + "," + "Economic,Age Range," + results.getField(AgeRangeP1, row);
 			String I1 = s + "," + "Intellectual,Age Range," + results.getField(AgeRangeP2, row);
@@ -725,10 +725,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S1 + "\n");
 			out.write(A1 + "\n");
 			
-			String DeviceInformationP1 = "Device Information" + qp1;
-			String DeviceInformationP2 = "Device Information" + qp2;
-			String DeviceInformationP3 = "Device Information" + qp3;
-			String DeviceInformationP4 = "Device Information" + qp4;
+			String[] DeviceInformationP1 = {"Device Information" , qp1};
+			String[] DeviceInformationP2 = {"Device Information" , qp2};
+			String[] DeviceInformationP3 = {"Device Information" , qp3};
+			String[] DeviceInformationP4 = {"Device Information" , qp4};
 
 			String ID2 = s + "," + "Economic,Device Information," + results.getField(DeviceInformationP1, row);
 			String I2 = s + "," + "Intellectual,Device Information," + results.getField(DeviceInformationP2, row);
@@ -739,10 +739,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S2 + "\n");
 			out.write(A2 + "\n");
 			
-			String DeviceIDP1 = "Device ID" + qp1;
-			String DeviceIDP2 = "Device ID" + qp2;
-			String DeviceIDP3 = "Device ID" + qp3;
-			String DeviceIDP4 = "Device ID" + qp4;
+			String[] DeviceIDP1 = {"Device ID" , qp1};
+			String[] DeviceIDP2 = {"Device ID" , qp2};
+			String[] DeviceIDP3 = {"Device ID" , qp3};
+			String[] DeviceIDP4 = {"Device ID" , qp4};
 
 			String ID3 = s + "," + "Economic,Device ID," + results.getField(DeviceIDP1, row);
 			String I3 = s + "," + "Intellectual,Device ID," + results.getField(DeviceIDP2, row);
@@ -753,10 +753,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S3 + "\n");
 			out.write(A3 + "\n");
 			
-			String UDIDIMEIP1 = "UDID/IMEI" + qp1;
-			String UDIDIMEIP2 = "UDID/IMEI" + qp2;
-			String UDIDIMEIP3 = "UDID/IMEI" + qp3;
-			String UDIDIMEIP4 = "UDID/IMEI" + qp4;
+			String[] UDIDIMEIP1 = {"UDID/IMEI" , qp1};
+			String[] UDIDIMEIP2 = {"UDID/IMEI" , qp2};
+			String[] UDIDIMEIP3 = {"UDID/IMEI" , qp3};
+			String[] UDIDIMEIP4 = {"UDID/IMEI" , qp4};
 			
 			String ID4 = s + "," + "Economic,UDID/IMEI," + results.getField(UDIDIMEIP1, row);
 			String I4 = s + "," + "Intellectual,UDID/IMEI," + results.getField(UDIDIMEIP2, row);
@@ -767,10 +767,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S4 + "\n");
 			out.write(A4 + "\n");
 			
-			String SensorDataP1 = "Sensor Data" + qp1;
-			String SensorDataP2 = "Sensor Data" + qp2;
-			String SensorDataP3 = "Sensor Data" + qp3;
-			String SensorDataP4 = "Sensor Data" + qp4;
+			String[] SensorDataP1 = {"Sensor Data" , qp1};
+			String []SensorDataP2 = {"Sensor Data" , qp2};
+			String []SensorDataP3 = {"Sensor Data" , qp3};
+			String []SensorDataP4 = {"Sensor Data" , qp4};
 			
 			String ID5 = s + "," + "Economic,Sensor Data," + results.getField(SensorDataP1, row);
 			String I5 = s + "," + "Intellectual,Sensor Data," + results.getField(SensorDataP2, row);
@@ -781,10 +781,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S5 + "\n");
 			out.write(A5 + "\n");
 			
-			String NetworkInformationP1 = "Network Information" + qp1;
-			String NetworkInformationP2 = "Network Information" + qp2;
-			String NetworkInformationP3 = "Network Information" + qp3;
-			String NetworkInformationP4 = "Network Information" + qp4;
+			String[] NetworkInformationP1 = {"Network Information" , qp1};
+			String[] NetworkInformationP2 = {"Network Information" , qp2};
+			String[] NetworkInformationP3 = {"Network Information" , qp3};
+			String[] NetworkInformationP4 = {"Network Information" , qp4};
 			
 			String ID6 = s + "," + "Economic,Network Information," + results.getField(NetworkInformationP1, row);
 			String I6 = s + "," + "Intellectual,Network Information," + results.getField(NetworkInformationP2, row);
@@ -795,10 +795,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S6 + "\n");
 			out.write(A6 + "\n");
 			
-			String IPAddressesP1 = "IP Addresses" + qp1;
-			String IPAddressesP2 = "IP Addresses" + qp2;
-			String IPAddressesP3 = "IP Addresses" + qp3;
-			String IPAddressesP4 = "IP Addresses" + qp4;
+			String[] IPAddressesP1 = {"IP Addresses" , qp1};
+			String []IPAddressesP2 = {"IP Addresses" , qp2};
+			String []IPAddressesP3 = {"IP Addresses" , qp3};
+			String []IPAddressesP4 = {"IP Addresses" , qp4};
 			
 			String ID7 = s + "," + "Economic,IP Addresses," + results.getField(IPAddressesP1, row);
 			String I7 = s + "," + "Intellectual,IP Addresses," + results.getField(IPAddressesP2, row);
@@ -809,10 +809,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S7 + "\n");
 			out.write(A7 + "\n");
 			
-			String PacketDataP1 = "Packet Data" + qp1;
-			String PacketDataP2 = "Packet Data" + qp2;
-			String PacketDataP3 = "Packet Data" + qp3;
-			String PacketDataP4 = "Packet Data" + qp4;
+			String []PacketDataP1 = {"Packet Data" , qp1};
+			String []PacketDataP2 = {"Packet Data" , qp2};
+			String []PacketDataP3 = {"Packet Data" , qp3};
+			String []PacketDataP4 = {"Packet Data" , qp4};
 			
 			String ID8 = s + "," + "Economic,Packet Data," + results.getField(PacketDataP1, row);
 			String I8 = s + "," + "Intellectual,Packet Data," + results.getField(PacketDataP2, row);
@@ -823,10 +823,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S8 + "\n");
 			out.write(A8 + "\n");
 			
-			String MACAddressesP1 = "MAC Addresses" + qp1;
-			String MACAddressesP2 = "MAC Addresses" + qp2;
-			String MACAddressesP3 = "MAC Addresses" + qp3;
-			String MACAddressesP4 = "MAC Addresses" + qp4;
+			String[] MACAddressesP1 = {"MAC Addresses" , qp1};
+			String[] MACAddressesP2 = {"MAC Addresses" , qp2};
+			String[] MACAddressesP3 = {"MAC Addresses" , qp3};
+			String[] MACAddressesP4 = {"MAC Addresses" , qp4};
 			
 			String ID9 = s + "," + "Economic,MAC Addresses," + results.getField(MACAddressesP1, row);
 			String I9 = s + "," + "Intellectual,MAC Addresses," + results.getField(MACAddressesP2, row);
@@ -837,10 +837,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S9 + "\n");
 			out.write(A9 + "\n");
 			
-			String UsernamesPasswordsP1 = "Usernames and Passwords" + qp1;
-			String UsernamesPasswordsP2 = "Usernames and Passwords" + qp2;
-			String UsernamesPasswordsP3 = "Usernames and Passwords" + qp3;
-			String UsernamesPasswordsP4 = "Usernames and Passwords" + qp4;
+			String[] UsernamesPasswordsP1 = {"Usernames and Passwords" , qp1};
+			String[] UsernamesPasswordsP2 = {"Usernames and Passwords" , qp2};
+			String[] UsernamesPasswordsP3 = {"Usernames and Passwords" , qp3};
+			String[] UsernamesPasswordsP4 = {"Usernames and Passwords" , qp4};
 			
 			String ID10 = s + "," + "Economic,Usernames and Passwords," + results.getField(UsernamesPasswordsP1, row);
 			String I10 = s + "," + "Intellectual,Usernames and Passwords,"
@@ -852,10 +852,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S10 + "\n");
 			out.write(A10 + "\n");
 			
-			String OSTypeVersionP1 = "OS Type and Version" + qp1;
-			String OSTypeVersionP2 =  "OS Type and Version" + qp2;
-			String OSTypeVersionP3 =  "OS Type and Version" + qp3;
-			String OSTypeVersionP4 =  "OS Type and Version" + qp4;
+			String[] OSTypeVersionP1 = {"OS Type and Version" , qp1};
+			String[] OSTypeVersionP2 = {"OS Type and Version" , qp2};
+			String[] OSTypeVersionP3 = {"OS Type and Version" , qp3};
+			String[] OSTypeVersionP4 = {"OS Type and Version" , qp4};
 
 			String ID12 = s + "," + "Economic,OS Type and Version," + results.getField(OSTypeVersionP1, row);
 			String I12 = s + "," + "Intellectual,OS Type and Version," + results.getField(OSTypeVersionP2, row);
@@ -866,10 +866,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S12 + "\n");
 			out.write(A12 + "\n");
 			
-			String RunningProcessesP1 = "Running Processes" + qp1;
-			String RunningProcessesP2 = "Running Processes" + qp2;
-			String RunningProcessesP3 = "Running Processes" + qp3;
-			String RunningProcessesP4 = "Running Processes" + qp4;
+			String[] RunningProcessesP1 = {"Running Processes" , qp1};
+			String[] RunningProcessesP2 = {"Running Processes" , qp2};
+			String[] RunningProcessesP3 = {"Running Processes" , qp3};
+			String[] RunningProcessesP4 = {"Running Processes" , qp4};
 
 			String ID13 = s + "," + "Economic,Running Processes," + results.getField(RunningProcessesP1, row);
 			String I13 = s + "," + "Intellectual,Running Processes," + results.getField(RunningProcessesP2, row);
@@ -880,10 +880,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S13 + "\n");
 			out.write(A13 + "\n");
 			
-			String MemoryDataP1 = "Memory Data" + qp1;
-			String MemoryDataP2 = "Memory Data" + qp2;
-			String MemoryDataP3 = "Memory Data" + qp3;
-			String MemoryDataP4 = "Memory Data" + qp4;
+			String[] MemoryDataP1 = {"Memory Data" , qp1};
+			String[] MemoryDataP2 = {"Memory Data" , qp2};
+			String[] MemoryDataP3 = {"Memory Data" , qp3};
+			String[] MemoryDataP4 = {"Memory Data" , qp4};
 
 			String ID14 = s + "," + "Economic,Memory Data," + results.getField(MemoryDataP1, row);
 			String I14 = s + "," + "Intellectual,Memory Data," + results.getField(MemoryDataP2, row);
@@ -894,10 +894,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S14 + "\n");
 			out.write(A14 + "\n");
 			
-			String RegistryInformationP1 = "Registry Information" + qp1;
-			String RegistryInformationP2 = "Registry Information" + qp2;
-			String RegistryInformationP3 = "Registry Information" + qp3;
-			String RegistryInformationP4 = "Registry Information" + qp4;
+			String[] RegistryInformationP1 = {"Registry Information" , qp1};
+			String []RegistryInformationP2 = {"Registry Information" , qp2};
+			String []RegistryInformationP3 = {"Registry Information" , qp3};
+			String []RegistryInformationP4 = {"Registry Information" , qp4};
 
 			String ID15 = s + "," + "Economic,Registry Information," + results.getField(RegistryInformationP1, row);
 			String I15 = s + "," + "Intellectual,Registry Information,"
@@ -909,10 +909,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S15 + "\n");
 			out.write(A15 + "\n");
 			
-			String TemporaryFilesP1 = "Temporary Files" + qp1;
-			String TemporaryFilesP2 = "Temporary Files" + qp2;
-			String TemporaryFilesP3 = "Temporary Files" + qp3;
-			String TemporaryFilesP4 = "Temporary Files" + qp4;
+			String[] TemporaryFilesP1 = {"Temporary Files" , qp1};
+			String[] TemporaryFilesP2 = {"Temporary Files" , qp2};
+			String[] TemporaryFilesP3 = {"Temporary Files" , qp3};
+			String[] TemporaryFilesP4 = {"Temporary Files" , qp4};
 
 			String ID16 = s + "," + "Economic,Temporary Files," + results.getField(TemporaryFilesP1, row);
 			String I16 = s + "," + "Intellectual,Temporary Files," + results.getField(TemporaryFilesP2, row);
@@ -923,10 +923,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S16 + "\n");
 			out.write(A16 + "\n");
 			
-			String ApplicationInformationP1 = "Application Information" + qp1;
-			String ApplicationInformationP2 = "Application Information" + qp2;
-			String ApplicationInformationP3 = "Application Information" + qp3;
-			String ApplicationInformationP4 = "Application Information" + qp4;
+			String[] ApplicationInformationP1 = {"Application Information" , qp1};
+			String[] ApplicationInformationP2 = {"Application Information" , qp2};
+			String[] ApplicationInformationP3 = {"Application Information" , qp3};
+			String[] ApplicationInformationP4 = {"Application Information" , qp4};
 
 			String ID17 = s + "," + "Economic,Application Information,"
 					+ results.getField(ApplicationInformationP1, row);
@@ -940,42 +940,42 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S17 + "\n");
 			out.write(A17 + "\n");
 			
-			String ApplicationSessionDataP1 = "Application Session Data" + qp1;
-			String ApplicationSessionDataP2 = "Application Session Data" + qp2;
-			String ApplicationSessionDataP3 = "Application Session Data" + qp3;
-			String ApplicationSessionDataP4 = "Application Session Data" + qp4;
+			String[] ApplicationSessionDataP1 = {"Application Session Data" , qp1};
+			String[] ApplicationSessionDataP2 = {"Application Session Data" , qp2};
+			String[] ApplicationSessionDataP3 = {"Application Session Data" , qp3};
+			String[] ApplicationSessionDataP4 = {"Application Session Data" , qp4};
 
 			String ID18 = s + "," + "Economic,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP1", row);
+					+ results.getField(ApplicationSessionDataP1, row);
 			String I18 = s + "," + "Intellectual,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP2", row);
+					+ results.getField(ApplicationSessionDataP2, row);
 			String S18 = s + "," + "Death,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP3", row);
+					+ results.getField(ApplicationSessionDataP3, row);
 			String A18 = s + "," + "Terrorism,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP4", row);
+					+ results.getField(ApplicationSessionDataP4, row);
 			out.write(ID18 + "\n");
 			out.write(I18 + "\n");
 			out.write(S18 + "\n");
 			out.write(A18 + "\n");
 
-			//TODO: this seems to be listed twice...?
-			String ID19 = s + "," + "Economic,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP1", row);
-			String I19 = s + "," + "Intellectual,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP2", row);
-			String S19 = s + "," + "Death,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP3", row);
-			String A19 = s + "," + "Terrorism,Application Session Data,"
-					+ results.getField("ApplicationSessionDataP4", row);
-			out.write(ID19 + "\n");
-			out.write(I19 + "\n");
-			out.write(S19 + "\n");
-			out.write(A19 + "\n");
+
+//			String ID19 = s + "," + "Economic,Application Session Data,"
+//					+ results.getField("ApplicationSessionDataP1", row);
+//			String I19 = s + "," + "Intellectual,Application Session Data,"
+//					+ results.getField("ApplicationSessionDataP2", row);
+//			String S19 = s + "," + "Death,Application Session Data,"
+//					+ results.getField("ApplicationSessionDataP3", row);
+//			String A19 = s + "," + "Terrorism,Application Session Data,"
+//					+ results.getField("ApplicationSessionDataP4", row);
+//			out.write(ID19 + "\n");
+//			out.write(I19 + "\n");
+//			out.write(S19 + "\n");
+//			out.write(A19 + "\n");
 			
-			String EmailsP1 = "Emails" + qp1;
-			String EmailsP2 = "Emails" + qp2;
-			String EmailsP3 = "Emails" + qp3;
-			String EmailsP4 = "Emails" + qp4;
+			String[] EmailsP1 = {"Emails" , qp1};
+			String[] EmailsP2 = {"Emails" , qp2};
+			String[] EmailsP3 = {"Emails" , qp3};
+			String[] EmailsP4 = {"Emails" , qp4};
 
 			String ID21 = s + "," + "Economic,Emails," + results.getField(EmailsP1, row);
 			String I21 = s + "," + "Intellectual,Emails," + results.getField(EmailsP2, row);
@@ -986,10 +986,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S21 + "\n");
 			out.write(A21 + "\n");
 			
-			String ChatHistoryP1 = "Chat History" + qp1;
-			String ChatHistoryP2 = "Chat History" + qp2;
-			String ChatHistoryP3 = "Chat History" + qp3;
-			String ChatHistoryP4 = "Chat History" + qp4;
+			String[] ChatHistoryP1 = {"Chat History" , qp1};
+			String[] ChatHistoryP2 = {"Chat History" , qp2};
+			String[] ChatHistoryP3 = {"Chat History" , qp3};
+			String[] ChatHistoryP4 = {"Chat History" , qp4};
 
 			String ID22 = s + "," + "Economic,Chat History," + results.getField(ChatHistoryP1, row);
 			String I22 = s + "," + "Intellectual,Chat History," + results.getField(ChatHistoryP2, row);
@@ -1000,10 +1000,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S22 + "\n");
 			out.write(A22 + "\n");
 			
-			String ContactInformationP1 = "Contact Information" + qp1;
-			String ContactInformationP2 = "Contact Information" + qp2;
-			String ContactInformationP3 = "Contact Information" + qp3;
-			String ContactInformationP4 = "Contact Information" + qp4;
+			String[] ContactInformationP1 = {"Contact Information" , qp1};
+			String[] ContactInformationP2 = {"Contact Information" , qp2};
+			String[] ContactInformationP3 = {"Contact Information" , qp3};
+			String[] ContactInformationP4 = {"Contact Information" , qp4};
 
 			String ID23 = s + "," + "Economic,Contact Information," + results.getField(ContactInformationP1, row);
 			String I23 = s + "," + "Intellectual,Contact Information," + results.getField(ContactInformationP2, row);
@@ -1014,10 +1014,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S23 + "\n");
 			out.write(A23 + "\n");
 			
-			String VideoImageFilesP1 = "Video/Image Files" + qp1;
-			String VideoImageFilesP2 = "Video/Image Files" + qp2;
-			String VideoImageFilesP3 = "Video/Image Files" + qp3;
-			String VideoImageFilesP4 = "Video/Image Files" + qp4;
+			String[] VideoImageFilesP1 = {"Video/Image Files" , qp1};
+			String[] VideoImageFilesP2 = {"Video/Image Files" , qp2};
+			String[] VideoImageFilesP3 = {"Video/Image Files" , qp3};
+			String[] VideoImageFilesP4 = {"Video/Image Files" , qp4};
 
 			String ID24 = s + "," + "Economic,Video/Image Files," + results.getField(VideoImageFilesP1, row);
 			String I24 = s + "," + "Intellectual,Video/Image Files," + results.getField(VideoImageFilesP2, row);
@@ -1028,10 +1028,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S24 + "\n");
 			out.write(A24 + "\n");
 			
-			String KeywordSearchesP1 = "Keyword Searches" + qp1;
-			String KeywordSearchesP2 = "Keyword Searches" + qp2;
-			String KeywordSearchesP3 = "Keyword Searches" + qp3;
-			String KeywordSearchesP4 = "Keyword Searches" + qp4;
+			String[] KeywordSearchesP1 = {"Keyword Searches" , qp1};
+			String[] KeywordSearchesP2 = {"Keyword Searches" , qp2};
+			String[] KeywordSearchesP3 = {"Keyword Searches" , qp3};
+			String[] KeywordSearchesP4 = {"Keyword Searches" , qp4};
 
 			String ID25 = s + "," + "Economic,Keyword Searches," + results.getField(KeywordSearchesP1, row);
 			String I25 = s + "," + "Intellectual,Keyword Searches," + results.getField(KeywordSearchesP2, row);
@@ -1042,10 +1042,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S25 + "\n");
 			out.write(A25 + "\n");
 			
-			String BrowserHistoryP1 = "Browser History" + qp1;
-			String BrowserHistoryP2 = "Browser History" + qp2;
-			String BrowserHistoryP3 = "Browser History" + qp3;
-			String BrowserHistoryP4 = "Browser History" + qp4;
+			String[] BrowserHistoryP1 = {"Browser History" , qp1};
+			String[] BrowserHistoryP2 = {"Browser History" , qp2};
+			String[] BrowserHistoryP3 = {"Browser History" , qp3};
+			String[] BrowserHistoryP4 = {"Browser History" , qp4};
 
 			String ID26 = s + "," + "Economic,Browser History," + results.getField(BrowserHistoryP1, row);
 			String I26 = s + "," + "Intellectual,Browser History," + results.getField(BrowserHistoryP2, row);
@@ -1056,10 +1056,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S26 + "\n");
 			out.write(A26 + "\n");
 			
-			String WebsitesVisitedP1 = "Websites Visited" + qp1;
-			String WebsitesVisitedP2 = "Websites Visited" + qp2;
-			String WebsitesVisitedP3 = "Websites Visited" + qp3;
-			String WebsitesVisitedP4 = "Websites Visited" + qp4;
+			String[] WebsitesVisitedP1 = {"Websites Visited" , qp1};
+			String[] WebsitesVisitedP2 = {"Websites Visited" , qp2};
+			String[] WebsitesVisitedP3 = {"Websites Visited" , qp3};
+			String[] WebsitesVisitedP4 = {"Websites Visited" , qp4};
 
 			String ID27 = s + "," + "Economic,Websites Visited," + results.getField(WebsitesVisitedP1, row);
 			String I27 = s + "," + "Intellectual,Websites Visited," + results.getField(WebsitesVisitedP2, row);
@@ -1070,10 +1070,10 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S27 + "\n");
 			out.write(A27 + "\n");
 			
-			String KeyloggingDataP1 = "Keylogging Data" + qp1;
-			String KeyloggingDataP2 = "Keylogging Data" + qp2;
-			String KeyloggingDataP3 = "Keylogging Data" + qp3;
-			String KeyloggingDataP4 = "Keylogging Data" + qp4;
+			String[] KeyloggingDataP1 = {"Keylogging Data" , qp1};
+			String[] KeyloggingDataP2 = {"Keylogging Data" , qp2};
+			String[] KeyloggingDataP3 = {"Keylogging Data" , qp3};
+			String[] KeyloggingDataP4 = {"Keylogging Data" , qp4};
 
 			String ID28 = s + "," + "Economic,Keylogging Data," + results.getField(KeyloggingDataP1, row);
 			String I28 = s + "," + "Intellectual,Keylogging Data," + results.getField(KeyloggingDataP2, row);

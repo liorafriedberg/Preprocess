@@ -10,6 +10,8 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 
+import processing.StringUtils;
+
 public class CSVFile {
 
 	private List<String> columns;
@@ -37,7 +39,14 @@ public class CSVFile {
 
 		while ((nextLine = reader.readNext()) != null) {
 			// nextLine[] is an array of values from the line
-			lines.add(nextLine);
+			
+			ArrayList<String> processedLine = new ArrayList<String>();
+			for (String element : nextLine){
+				//Strip out all non-ASCII characters.
+				processedLine.add(element.replaceAll("[^\\x00-\\x7F]", ""));
+			}
+			String[] result = processedLine.toArray(new String[0]); 
+			lines.add(result);
 		}
 
 		String[] column_names = lines.get(0);
@@ -121,6 +130,28 @@ public class CSVFile {
 	public List<String[]> getAllLines() {
 		return lines;
 	}
+	
+	/**
+	 * @param column_name
+	 *            The strings or substrings that the column name must contain.
+	 * @param row_number
+	 *            Row number that you want to retrieve. Zero indexed (0
+	 *            represents the first row of values, not the row header).
+	 * @return Returns the value at the corresponding row, or column. Null if
+	 *         the column or row wasn't found.
+	 */
+	public String getField(String[] column_name, int row_number) {
+		int whichColumn = StringUtils.findWhichStringContainsSubstrings(columns.toArray(new String[0]), column_name);		
+		
+		if (whichColumn == -1)
+			return null;
+
+		String value;
+
+		value = lines.get(row_number)[whichColumn];
+
+		return value;
+	}
 
 	/**
 	 * @param column_name
@@ -137,6 +168,7 @@ public class CSVFile {
 	 */
 	public String getField(String column_name, int row_number) {
 		int whichColumn = columns.indexOf(column_name);
+		
 
 		if (whichColumn == -1)
 			return null;
