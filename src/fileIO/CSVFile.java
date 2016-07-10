@@ -75,7 +75,7 @@ public class CSVFile {
 	}
 
 	public static boolean write(List<String> header, List<String> lines, File filename) {
-		//TODO: pull this method from AMTResultsFile
+		// TODO: pull this method from AMTResultsFile
 		try {
 			FileWriter out;
 			out = new FileWriter(filename);
@@ -126,9 +126,9 @@ public class CSVFile {
 	 * @param column_name
 	 *            The name of the column you want to retrieve. Column names are
 	 *            specified in the header row of the CSV file. Only the first
-	 *            instance of the column name specified will be returned. Column
-	 *            names need not be surrounded with quotes, a regular string
-	 *            will do.
+	 *            instance of the column name specified will be returned. Don't
+	 *            worry about quotes, commas, or any other special characters,
+	 *            any regular string will do.
 	 * @param row_number
 	 *            Row number that you want to retrieve. Zero indexed (0
 	 *            represents the first row of values, not the row header).

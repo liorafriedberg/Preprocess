@@ -9,7 +9,7 @@ public class RiskSurveyAnalyzerDriver {
 
 		//RiskSurvey.writeInputFile();
 		
-		CSVFile results=CSVFile.read("/Users/liorafriedberg/Desktop/gizmo.csv");
+		CSVFile results=CSVFile.read("C:\\Users\\Daniel Smullen\\Downloads\\20160709212053-SurveyExport.csv");
 		RiskSurveyPrettyPrinter.analyseDemographics(results);
 		//RiskSurvey3.analyseDiscomfort(results);
 		//RiskSurvey3.analyseBehaviour1(results);
