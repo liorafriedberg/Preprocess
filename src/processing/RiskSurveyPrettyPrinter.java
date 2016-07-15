@@ -15,6 +15,7 @@ public class RiskSurveyPrettyPrinter {
 	public static TreeMap<String, Float> score1 = new TreeMap<String, Float>();
 	public static TreeMap<String, Float> score2 = new TreeMap<String, Float>();
 	public static TreeMap<String, String> Wcity = new TreeMap<String, String>();
+	public static TreeMap<String, String> Wshares = new TreeMap<String, String>();
 	public static TreeMap<String, String> Wfamily = new TreeMap<String, String>();
 	public static TreeMap<String, String> Wworkplace = new TreeMap<String, String>();
 	public static TreeMap<String, String> Wworkplacesize = new TreeMap<String, String>();
@@ -22,6 +23,7 @@ public class RiskSurveyPrettyPrinter {
 	public static TreeMap<String, String> Wzips = new TreeMap<String, String>();
 
 	// WorkerID, value
+	public static TreeMap<String, String> Wpop = new TreeMap<String, String>();
 	public static TreeMap<String, String> Wgender = new TreeMap<String, String>();
 	public static TreeMap<String, String> Weducation = new TreeMap<String, String>();
 	public static TreeMap<String, String> Wethnicity = new TreeMap<String, String>();
@@ -38,7 +40,7 @@ public class RiskSurveyPrettyPrinter {
 
 	public static void changeWTS() throws IOException {
 
-		CSVFile amt = CSVFile.read("/Users/liorafriedberg/Desktop/vignettes_discomfort.csv"); // this
+		CSVFile amt = CSVFile.read("C:\\Users\\dsmullen\\Downloads\\vignettes.csv"); // this
 																								// is
 																								// out-ed
 																								// by
@@ -48,12 +50,16 @@ public class RiskSurveyPrettyPrinter {
 																								// all
 																								// from
 																								// desktop)
-		FileWriter out = new FileWriter(new File("/Users/liorafriedberg/Desktop/results-afterchangedWTS.csv"));
+		FileWriter out = new FileWriter(new File("C:\\Users\\dsmullen\\Downloads\\results-afterchangedWTS.csv"));
 		out.write("willingness\n");
 
 		for (int i = 0; i < amt.size(); i++) {
 			String s = amt.getField("willingness", i);
 			String str = "";
+			if (Integer.parseInt(s) >= 10){
+				str = Integer.toString(Integer.parseInt(s) - 9);
+			}
+			
 			if (s.equals("1"))
 				str = "8";
 			if (s.equals("2"))
@@ -252,11 +258,12 @@ public class RiskSurveyPrettyPrinter {
 	}
 
 	public static void analyseDemographics(CSVFile results) throws IOException {
-		FileWriter out = new FileWriter("C:\\Users\\Daniel Smullen\\Downloads\\demographics80.csv");
-		
+		FileWriter out = new FileWriter("C:\\Users\\dsmullen\\Downloads\\demographics80.csv");
+
 		final int participants = 80;
-		
+
 		// these are counts of the vars, above tree maps are the results
+		TreeMap<String, Float> shares = new TreeMap<String, Float>();
 		TreeMap<String, Float> gender = new TreeMap<String, Float>();
 		TreeMap<String, Float> city = new TreeMap<String, Float>();
 		TreeMap<String, Float> wp = new TreeMap<String, Float>();
@@ -349,6 +356,19 @@ public class RiskSurveyPrettyPrinter {
 			else {
 				gender.put(s, (float) 1);
 			}
+			
+			// Has personal info on their workplace pc
+			s = results.getField("In this survey, we ask participants to consider the privacy risk of storing their personal information on their personal smart phone or their workplace computer. Do you store personal information on your workplace computer?", row);
+			Wshares.put(results.getField("WorkerID", row), results.getField("In this survey, we ask participants to consider the privacy risk of storing their personal information on their personal smart phone or their workplace computer. Do you store personal information on your workplace computer?", row));
+			if (shares.containsKey(s)) {
+				temp = shares.get(s);
+				shares.remove(s);
+				shares.put(s, temp + 1);
+			}
+
+			else {
+				shares.put(s, (float) 1);
+			}
 
 			// age range
 			s = results.getField("What is your age group?", row);
@@ -438,26 +458,29 @@ public class RiskSurveyPrettyPrinter {
 		// Write to file - age range
 		out.write("\n\nAge Range,Frequence,%\n");
 		for (String str : ageRangeD.keySet()) {
-			out.write(escapeQuotes(str) + "," + ageRangeD.get(str) + "," + (ageRangeD.get(str)) / participants * 100 + "%\n");
+			out.write(escapeQuotes(str) + "," + ageRangeD.get(str) + "," + (ageRangeD.get(str)) / participants * 100
+					+ "%\n");
 		}
 
 		// Write to file - gender
 		out.write("\nEthnicity,Frequence,%\n");
 		for (String str : ethnicity.keySet()) {
-			out.write(escapeQuotes(str) + "," + ethnicity.get(str) + "," + (ethnicity.get(str)) / participants * 100 + "%\n");
+			out.write(escapeQuotes(str) + "," + ethnicity.get(str) + "," + (ethnicity.get(str)) / participants * 100
+					+ "%\n");
 		}
 
 		// Write to file - education
 		out.write("\nEducation,Frequence,%\n");
 		for (String str : education.keySet()) {
-			out.write(escapeQuotes(str) + "," + education.get(str) + "," + (education.get(str)) / participants * 100 + "%\n");
+			out.write(escapeQuotes(str) + "," + education.get(str) + "," + (education.get(str)) / participants * 100
+					+ "%\n");
 		}
 
 		// Write to file - householdIncome
 		out.write("Household Income,Frequence,%\n");
 		for (String str : householdIncome.keySet()) {
-			out.write(escapeQuotes(str) + "," + householdIncome.get(str) + "," + (householdIncome.get(str)) / participants * 100
-					+ "%\n");
+			out.write(escapeQuotes(str) + "," + householdIncome.get(str) + ","
+					+ (householdIncome.get(str)) / participants * 100 + "%\n");
 		}
 
 		out.close();
@@ -587,16 +610,16 @@ public class RiskSurveyPrettyPrinter {
 
 	// Main function to generate input for R
 	public static void analyseVignettes(CSVFile results) throws IOException {
-		System.out.println("ENTERS VIGNETTES");
-		FileWriter out = new FileWriter("C:\\Users\\Daniel Smullen\\Downloads\\vignettes.csv");
+		System.err.println("Analyzing Vignettes");
+		FileWriter out = new FileWriter("C:\\Users\\dsmullen\\Downloads\\vignettes.csv");
 
 		// took out cond,shopping,harm
 
 		out.write(
-				"workerID,population,gender,agegroup,education,ethnicity,income,cond,wp,wpInteract,city,family,wpSize,risk,device,economicScore,intellectualScore,deathScore,terrorismScore,purpose,infoType,willingness\n");
-		TreeMap<String, String> info_levels = new TreeMap<String, String>();
+				"workerID,population,sharesPersonalData,gender,agegroup,education,ethnicity,income,cond,harm,wp,wpInteract,citySize,family,wpSize,risk,device,economicScore,intellectualScore,deathScore,terrorismScore,purpose,infoType,willingness\n");
+		//TreeMap<String, String> info_levels = new TreeMap<String, String>();
 
-		FileWriter out_null = new FileWriter("C:\\Users\\Daniel Smullen\\Downloads\\city_not_found.csv");
+		FileWriter out_null = new FileWriter("C:\\Users\\dsmullen\\Downloads\\city_not_found.csv");
 
 		/*
 		 * info_levels.put("334", "SSN"); info_levels.put("335",
@@ -605,117 +628,121 @@ public class RiskSurveyPrettyPrinter {
 		 * "MedicalProcedure"); info_levels.put("361", "DateOfBirth");
 		 */
 
-		CSVFile census = CSVFile.read("C:\\Users\\Daniel Smullen\\workspace\\Preprocess\\Data\\out.csv");
+		CSVFile census = CSVFile.read("C:\\Users\\dsmullen\\workspace\\Preprocess\\Data\\out.csv");
 		TreeMap<String, String> population = new TreeMap<String, String>();
 		for (int row = 0; row < census.size(); row++) {
-			String city = census.getField("city", row);
-			String state = census.getField("state", row);
+			String city = census.getField("city", row).toUpperCase();
+			String state = census.getField("state", row).toUpperCase();
 			city = city + ", " + state;
 			String pop = census.getField("pop", row);
 			population.put(city, pop);
 		}
 
-		for (String s : population.keySet()) {
-			System.err.println(s + "--" + population.get(s));
-		}
+//		for (String s : population.keySet()) {
+//			System.err.println(s + "--" + population.get(s));
+//		}
 		int count_null = 0;
-		// **//
 		for (int row = 0; row < results.size(); row++) {
-			/*
-			 * String c="empty"; c= results.getField("City",
-			 * row).replace("city",""); c=c+";"+results.getField("State", row);
-			 * String pop1= population.get(c);
-			 * //System.err.println(c+"--"+pop1); if(pop1==null){ count_null++;
-			 * out_null.write(c+"\n"); }
-			 */
+			String c1 = "empty";
+			c1 = results.getField("City", row);
+			c1 = c1 + ", " + results.getField("State/Region", row);
+			c1 = c1.toUpperCase();
+			String pop1 = population.get(c1);
+			System.err.println(c1 + "--" + pop1);
+			if (pop1 == null) {
+				count_null++;
+				out_null.write(c1 + "\n");
+			}
+
 			String z = results.getField("zip", row);
 
 			// TODO: Add the real values
 			String p = "pop";
 			String c = "city";
 			String st = "state";
-			
+			String harm = "Surveillance";
+
 			String first, second, third, fourth;
 			String economicScore = "";
-			String intellectualScore= "";
-			String deathScore= "";
-			String terrorismScore= "";
-			
-			String[] q1 = {"[question(\"value\"), id=\"834\"]"};
-			String[] q2 = {"[question(\"value\"), id=\"839\"]"};
-			String[] q3 = {"[question(\"value\"), id=\"840\"]"};
-			String[] q4 = {"[question(\"value\"), id=\"841\"]"};
-			
-			
-			first = results.getField(new String[] {"Please choose the most"}, row);
-			second = results.getField(new String[] {"Please choose the second"}, row);
-			third = results.getField(new String[] {"Please choose the third"}, row);
-			fourth = results.getField(new String[] {"Please choose the least"}, row);
-			
-			if (first.contains("investigating imminent threat of death or harm to an individual, including children")){
+			String intellectualScore = "";
+			String deathScore = "";
+			String terrorismScore = "";
+
+			String[] q1 = { "[question(\"value\"), id=\"834\"]" };
+			String[] q2 = { "[question(\"value\"), id=\"839\"]" };
+			String[] q3 = { "[question(\"value\"), id=\"840\"]" };
+			String[] q4 = { "[question(\"value\"), id=\"841\"]" };
+
+			first = results.getField(new String[] { "Please choose the most" }, row);
+			second = results.getField(new String[] { "Please choose the second" }, row);
+			third = results.getField(new String[] { "Please choose the third" }, row);
+			fourth = results.getField(new String[] { "Please choose the least" }, row);
+
+			if (first.contains("investigating imminent threat of death or harm to an individual, including children")) {
 				deathScore = results.getField(q1, row);
-			}else if (first.contains("investigating economic harm, fraud or identity theft")){
+			} else if (first.contains("investigating economic harm, fraud or identity theft")) {
 				economicScore = results.getField(q1, row);
-			}else if (first.contains("investigating intellectual property and trade secrets")){
+			} else if (first.contains("investigating intellectual property and trade secrets")) {
 				intellectualScore = results.getField(q1, row);
-			}else{
+			} else {
 				terrorismScore = results.getField(q1, row);
 			}
-				
-			if (second.contains("investigating imminent threat of death or harm to an individual, including children")){
+
+			if (second
+					.contains("investigating imminent threat of death or harm to an individual, including children")) {
 				deathScore = results.getField(q2, row);
-			}else if (second.contains("investigating economic harm, fraud or identity theft")){
+			} else if (second.contains("investigating economic harm, fraud or identity theft")) {
 				economicScore = results.getField(q2, row);
-			}else if (second.contains("investigating intellectual property and trade secrets")){
+			} else if (second.contains("investigating intellectual property and trade secrets")) {
 				intellectualScore = results.getField(q2, row);
-			}else{
+			} else {
 				terrorismScore = results.getField(q2, row);
 			}
-	
-			if (third.contains("investigating imminent threat of death or harm to an individual, including children")){
+
+			if (third.contains("investigating imminent threat of death or harm to an individual, including children")) {
 				deathScore = results.getField(q3, row);
-			}else if (third.contains("investigating economic harm, fraud or identity theft")){
+			} else if (third.contains("investigating economic harm, fraud or identity theft")) {
 				economicScore = results.getField(q3, row);
-			}else if (third.contains("investigating intellectual property and trade secrets")){
+			} else if (third.contains("investigating intellectual property and trade secrets")) {
 				intellectualScore = results.getField(q3, row);
-			}else{
+			} else {
 				terrorismScore = results.getField(q3, row);
 			}
-			
-			if (fourth.contains("investigating imminent threat of death or harm to an individual, including children")){
+
+			if (fourth
+					.contains("investigating imminent threat of death or harm to an individual, including children")) {
 				deathScore = results.getField(q4, row);
-			}else if (fourth.contains("investigating economic harm, fraud or identity theft")){
+			} else if (fourth.contains("investigating economic harm, fraud or identity theft")) {
 				economicScore = results.getField(q4, row);
-			}else if (fourth.contains("investigating intellectual property and trade secrets")){
+			} else if (fourth.contains("investigating intellectual property and trade secrets")) {
 				intellectualScore = results.getField(q4, row);
-			}else{
+			} else {
 				terrorismScore = results.getField(q4, row);
 			}
-			
 
-			String s = results.getField("WorkerID", row) + "," + p + ","
+			String s = results.getField("WorkerID", row) + "," + pop1 + "," 
+					+ Wshares.get(results.getField("WorkerID", row)) + ","
 					+ Wgender.get(results.getField("WorkerID", row)) + ","
 					+ Wagegroup.get(results.getField("WorkerID", row)) + ","
 					+ escapeQuotes(Weducation.get(results.getField("WorkerID", row))) + ","
 					+ Wethnicity.get(results.getField("WorkerID", row)) + ","
 					+ escapeQuotes(Wincome.get(results.getField("WorkerID", row))) + ","
-					+ results.getField("condition", row) + "," + Wworkplace.get(results.getField("WorkerID", row)) + ","
-					+ WworkplaceInteract.get(results.getField("WorkerID", row)) + "," + c + ","
+					+ results.getField("condition", row) + "," + harm + "," + Wworkplace.get(results.getField("WorkerID", row)) + ","
+					+ WworkplaceInteract.get(results.getField("WorkerID", row)) + "," + Wcity.get(results.getField("WorkerID", row)) + ","
 					+ Wfamily.get(results.getField("WorkerID", row)) + ","
 					+ Wworkplacesize.get(results.getField("WorkerID", row)) + "," + results.getField("risk", row) + ","
-					+ results.getField("Device", row) + ","
-					+ economicScore + "," + intellectualScore + ","
-					+ deathScore + "," + terrorismScore;
-			
-			String qp1 = "[question(\"value\"), id=\"431\"]";
-			String qp2 = "[question(\"value\"), id=\"432\"]";
-			String qp3 = "[question(\"value\"), id=\"433\"]"; 
+					+ results.getField("Device", row) + "," + economicScore + "," + intellectualScore + "," + deathScore
+					+ "," + terrorismScore;
+
+			String qp1 = "[question(\"value\"), id=\"432\"]";
+			String qp2 = "[question(\"value\"), id=\"431\"]";
+			String qp3 = "[question(\"value\"), id=\"433\"]";
 			String qp4 = "[question(\"value\"), id=\"434\"]";
-			
-			String[] AgeRangeP1 = {"Age Range" , qp1};
-			String[] AgeRangeP2 = {"Age Range" , qp2};
-			String[] AgeRangeP3 = {"Age Range" , qp3};
-			String[] AgeRangeP4 = {"Age Range" , qp4};
+
+			String[] AgeRangeP1 = { "Age Range", qp1 };
+			String[] AgeRangeP2 = { "Age Range", qp2 };
+			String[] AgeRangeP3 = { "Age Range", qp3 };
+			String[] AgeRangeP4 = { "Age Range", qp4 };
 
 			String ID1 = s + "," + "Economic,Age Range," + results.getField(AgeRangeP1, row);
 			String I1 = s + "," + "Intellectual,Age Range," + results.getField(AgeRangeP2, row);
@@ -725,11 +752,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I1 + "\n");
 			out.write(S1 + "\n");
 			out.write(A1 + "\n");
-			
-			String[] DeviceInformationP1 = {"Device Information" , qp1};
-			String[] DeviceInformationP2 = {"Device Information" , qp2};
-			String[] DeviceInformationP3 = {"Device Information" , qp3};
-			String[] DeviceInformationP4 = {"Device Information" , qp4};
+
+			String[] DeviceInformationP1 = { "Device Information", qp1 };
+			String[] DeviceInformationP2 = { "Device Information", qp2 };
+			String[] DeviceInformationP3 = { "Device Information", qp3 };
+			String[] DeviceInformationP4 = { "Device Information", qp4 };
 
 			String ID2 = s + "," + "Economic,Device Information," + results.getField(DeviceInformationP1, row);
 			String I2 = s + "," + "Intellectual,Device Information," + results.getField(DeviceInformationP2, row);
@@ -739,11 +766,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I2 + "\n");
 			out.write(S2 + "\n");
 			out.write(A2 + "\n");
-			
-			String[] DeviceIDP1 = {"Device ID" , qp1};
-			String[] DeviceIDP2 = {"Device ID" , qp2};
-			String[] DeviceIDP3 = {"Device ID" , qp3};
-			String[] DeviceIDP4 = {"Device ID" , qp4};
+
+			String[] DeviceIDP1 = { "Device ID", qp1 };
+			String[] DeviceIDP2 = { "Device ID", qp2 };
+			String[] DeviceIDP3 = { "Device ID", qp3 };
+			String[] DeviceIDP4 = { "Device ID", qp4 };
 
 			String ID3 = s + "," + "Economic,Device ID," + results.getField(DeviceIDP1, row);
 			String I3 = s + "," + "Intellectual,Device ID," + results.getField(DeviceIDP2, row);
@@ -753,12 +780,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I3 + "\n");
 			out.write(S3 + "\n");
 			out.write(A3 + "\n");
-			
-			String[] UDIDIMEIP1 = {"UDID/IMEI" , qp1};
-			String[] UDIDIMEIP2 = {"UDID/IMEI" , qp2};
-			String[] UDIDIMEIP3 = {"UDID/IMEI" , qp3};
-			String[] UDIDIMEIP4 = {"UDID/IMEI" , qp4};
-			
+
+			String[] UDIDIMEIP1 = { "UDID/IMEI", qp1 };
+			String[] UDIDIMEIP2 = { "UDID/IMEI", qp2 };
+			String[] UDIDIMEIP3 = { "UDID/IMEI", qp3 };
+			String[] UDIDIMEIP4 = { "UDID/IMEI", qp4 };
+
 			String ID4 = s + "," + "Economic,UDID/IMEI," + results.getField(UDIDIMEIP1, row);
 			String I4 = s + "," + "Intellectual,UDID/IMEI," + results.getField(UDIDIMEIP2, row);
 			String S4 = s + "," + "Death,UDID/IMEI," + results.getField(UDIDIMEIP3, row);
@@ -767,12 +794,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I4 + "\n");
 			out.write(S4 + "\n");
 			out.write(A4 + "\n");
-			
-			String[] SensorDataP1 = {"Sensor Data" , qp1};
-			String []SensorDataP2 = {"Sensor Data" , qp2};
-			String []SensorDataP3 = {"Sensor Data" , qp3};
-			String []SensorDataP4 = {"Sensor Data" , qp4};
-			
+
+			String[] SensorDataP1 = { "Sensor Data", qp1 };
+			String[] SensorDataP2 = { "Sensor Data", qp2 };
+			String[] SensorDataP3 = { "Sensor Data", qp3 };
+			String[] SensorDataP4 = { "Sensor Data", qp4 };
+
 			String ID5 = s + "," + "Economic,Sensor Data," + results.getField(SensorDataP1, row);
 			String I5 = s + "," + "Intellectual,Sensor Data," + results.getField(SensorDataP2, row);
 			String S5 = s + "," + "Death,Sensor Data," + results.getField(SensorDataP3, row);
@@ -781,12 +808,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I5 + "\n");
 			out.write(S5 + "\n");
 			out.write(A5 + "\n");
-			
-			String[] NetworkInformationP1 = {"Network Information" , qp1};
-			String[] NetworkInformationP2 = {"Network Information" , qp2};
-			String[] NetworkInformationP3 = {"Network Information" , qp3};
-			String[] NetworkInformationP4 = {"Network Information" , qp4};
-			
+
+			String[] NetworkInformationP1 = { "Network Information", qp1 };
+			String[] NetworkInformationP2 = { "Network Information", qp2 };
+			String[] NetworkInformationP3 = { "Network Information", qp3 };
+			String[] NetworkInformationP4 = { "Network Information", qp4 };
+
 			String ID6 = s + "," + "Economic,Network Information," + results.getField(NetworkInformationP1, row);
 			String I6 = s + "," + "Intellectual,Network Information," + results.getField(NetworkInformationP2, row);
 			String S6 = s + "," + "Death,Network Information," + results.getField(NetworkInformationP3, row);
@@ -795,12 +822,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I6 + "\n");
 			out.write(S6 + "\n");
 			out.write(A6 + "\n");
-			
-			String[] IPAddressesP1 = {"IP Addresses" , qp1};
-			String []IPAddressesP2 = {"IP Addresses" , qp2};
-			String []IPAddressesP3 = {"IP Addresses" , qp3};
-			String []IPAddressesP4 = {"IP Addresses" , qp4};
-			
+
+			String[] IPAddressesP1 = { "IP Addresses", qp1 };
+			String[] IPAddressesP2 = { "IP Addresses", qp2 };
+			String[] IPAddressesP3 = { "IP Addresses", qp3 };
+			String[] IPAddressesP4 = { "IP Addresses", qp4 };
+
 			String ID7 = s + "," + "Economic,IP Addresses," + results.getField(IPAddressesP1, row);
 			String I7 = s + "," + "Intellectual,IP Addresses," + results.getField(IPAddressesP2, row);
 			String S7 = s + "," + "Death,IP Addresses," + results.getField(IPAddressesP3, row);
@@ -809,12 +836,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I7 + "\n");
 			out.write(S7 + "\n");
 			out.write(A7 + "\n");
-			
-			String []PacketDataP1 = {"Packet Data" , qp1};
-			String []PacketDataP2 = {"Packet Data" , qp2};
-			String []PacketDataP3 = {"Packet Data" , qp3};
-			String []PacketDataP4 = {"Packet Data" , qp4};
-			
+
+			String[] PacketDataP1 = { "Packet Data", qp1 };
+			String[] PacketDataP2 = { "Packet Data", qp2 };
+			String[] PacketDataP3 = { "Packet Data", qp3 };
+			String[] PacketDataP4 = { "Packet Data", qp4 };
+
 			String ID8 = s + "," + "Economic,Packet Data," + results.getField(PacketDataP1, row);
 			String I8 = s + "," + "Intellectual,Packet Data," + results.getField(PacketDataP2, row);
 			String S8 = s + "," + "Death,Packet Data," + results.getField(PacketDataP3, row);
@@ -823,12 +850,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I8 + "\n");
 			out.write(S8 + "\n");
 			out.write(A8 + "\n");
-			
-			String[] MACAddressesP1 = {"MAC Addresses" , qp1};
-			String[] MACAddressesP2 = {"MAC Addresses" , qp2};
-			String[] MACAddressesP3 = {"MAC Addresses" , qp3};
-			String[] MACAddressesP4 = {"MAC Addresses" , qp4};
-			
+
+			String[] MACAddressesP1 = { "MAC Addresses", qp1 };
+			String[] MACAddressesP2 = { "MAC Addresses", qp2 };
+			String[] MACAddressesP3 = { "MAC Addresses", qp3 };
+			String[] MACAddressesP4 = { "MAC Addresses", qp4 };
+
 			String ID9 = s + "," + "Economic,MAC Addresses," + results.getField(MACAddressesP1, row);
 			String I9 = s + "," + "Intellectual,MAC Addresses," + results.getField(MACAddressesP2, row);
 			String S9 = s + "," + "Death,MAC Addresses," + results.getField(MACAddressesP3, row);
@@ -837,12 +864,12 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I9 + "\n");
 			out.write(S9 + "\n");
 			out.write(A9 + "\n");
-			
-			String[] UsernamesPasswordsP1 = {"Usernames and Passwords" , qp1};
-			String[] UsernamesPasswordsP2 = {"Usernames and Passwords" , qp2};
-			String[] UsernamesPasswordsP3 = {"Usernames and Passwords" , qp3};
-			String[] UsernamesPasswordsP4 = {"Usernames and Passwords" , qp4};
-			
+
+			String[] UsernamesPasswordsP1 = { "Usernames and Passwords", qp1 };
+			String[] UsernamesPasswordsP2 = { "Usernames and Passwords", qp2 };
+			String[] UsernamesPasswordsP3 = { "Usernames and Passwords", qp3 };
+			String[] UsernamesPasswordsP4 = { "Usernames and Passwords", qp4 };
+
 			String ID10 = s + "," + "Economic,Usernames and Passwords," + results.getField(UsernamesPasswordsP1, row);
 			String I10 = s + "," + "Intellectual,Usernames and Passwords,"
 					+ results.getField(UsernamesPasswordsP2, row);
@@ -852,11 +879,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I10 + "\n");
 			out.write(S10 + "\n");
 			out.write(A10 + "\n");
-			
-			String[] OSTypeVersionP1 = {"OS Type and Version" , qp1};
-			String[] OSTypeVersionP2 = {"OS Type and Version" , qp2};
-			String[] OSTypeVersionP3 = {"OS Type and Version" , qp3};
-			String[] OSTypeVersionP4 = {"OS Type and Version" , qp4};
+
+			String[] OSTypeVersionP1 = { "OS Type and Version", qp1 };
+			String[] OSTypeVersionP2 = { "OS Type and Version", qp2 };
+			String[] OSTypeVersionP3 = { "OS Type and Version", qp3 };
+			String[] OSTypeVersionP4 = { "OS Type and Version", qp4 };
 
 			String ID12 = s + "," + "Economic,OS Type and Version," + results.getField(OSTypeVersionP1, row);
 			String I12 = s + "," + "Intellectual,OS Type and Version," + results.getField(OSTypeVersionP2, row);
@@ -866,11 +893,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I12 + "\n");
 			out.write(S12 + "\n");
 			out.write(A12 + "\n");
-			
-			String[] RunningProcessesP1 = {"Running Processes" , qp1};
-			String[] RunningProcessesP2 = {"Running Processes" , qp2};
-			String[] RunningProcessesP3 = {"Running Processes" , qp3};
-			String[] RunningProcessesP4 = {"Running Processes" , qp4};
+
+			String[] RunningProcessesP1 = { "Running Processes", qp1 };
+			String[] RunningProcessesP2 = { "Running Processes", qp2 };
+			String[] RunningProcessesP3 = { "Running Processes", qp3 };
+			String[] RunningProcessesP4 = { "Running Processes", qp4 };
 
 			String ID13 = s + "," + "Economic,Running Processes," + results.getField(RunningProcessesP1, row);
 			String I13 = s + "," + "Intellectual,Running Processes," + results.getField(RunningProcessesP2, row);
@@ -880,11 +907,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I13 + "\n");
 			out.write(S13 + "\n");
 			out.write(A13 + "\n");
-			
-			String[] MemoryDataP1 = {"Memory Data" , qp1};
-			String[] MemoryDataP2 = {"Memory Data" , qp2};
-			String[] MemoryDataP3 = {"Memory Data" , qp3};
-			String[] MemoryDataP4 = {"Memory Data" , qp4};
+
+			String[] MemoryDataP1 = { "Memory Data", qp1 };
+			String[] MemoryDataP2 = { "Memory Data", qp2 };
+			String[] MemoryDataP3 = { "Memory Data", qp3 };
+			String[] MemoryDataP4 = { "Memory Data", qp4 };
 
 			String ID14 = s + "," + "Economic,Memory Data," + results.getField(MemoryDataP1, row);
 			String I14 = s + "," + "Intellectual,Memory Data," + results.getField(MemoryDataP2, row);
@@ -894,26 +921,25 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I14 + "\n");
 			out.write(S14 + "\n");
 			out.write(A14 + "\n");
-			
-			String[] RegistryInformationP1 = {"Registry Information" , qp1};
-			String []RegistryInformationP2 = {"Registry Information" , qp2};
-			String []RegistryInformationP3 = {"Registry Information" , qp3};
-			String []RegistryInformationP4 = {"Registry Information" , qp4};
+
+			String[] RegistryInformationP1 = { "Registry Information", qp1 };
+			String[] RegistryInformationP2 = { "Registry Information", qp2 };
+			String[] RegistryInformationP3 = { "Registry Information", qp3 };
+			String[] RegistryInformationP4 = { "Registry Information", qp4 };
 
 			String ID15 = s + "," + "Economic,Registry Information," + results.getField(RegistryInformationP1, row);
-			String I15 = s + "," + "Intellectual,Registry Information,"
-					+ results.getField(RegistryInformationP2, row);
+			String I15 = s + "," + "Intellectual,Registry Information," + results.getField(RegistryInformationP2, row);
 			String S15 = s + "," + "Death,Registry Information," + results.getField(RegistryInformationP3, row);
 			String A15 = s + "," + "Terrorism,Registry Information," + results.getField(RegistryInformationP4, row);
 			out.write(ID15 + "\n");
 			out.write(I15 + "\n");
 			out.write(S15 + "\n");
 			out.write(A15 + "\n");
-			
-			String[] TemporaryFilesP1 = {"Temporary Files" , qp1};
-			String[] TemporaryFilesP2 = {"Temporary Files" , qp2};
-			String[] TemporaryFilesP3 = {"Temporary Files" , qp3};
-			String[] TemporaryFilesP4 = {"Temporary Files" , qp4};
+
+			String[] TemporaryFilesP1 = { "Temporary Files", qp1 };
+			String[] TemporaryFilesP2 = { "Temporary Files", qp2 };
+			String[] TemporaryFilesP3 = { "Temporary Files", qp3 };
+			String[] TemporaryFilesP4 = { "Temporary Files", qp4 };
 
 			String ID16 = s + "," + "Economic,Temporary Files," + results.getField(TemporaryFilesP1, row);
 			String I16 = s + "," + "Intellectual,Temporary Files," + results.getField(TemporaryFilesP2, row);
@@ -923,11 +949,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I16 + "\n");
 			out.write(S16 + "\n");
 			out.write(A16 + "\n");
-			
-			String[] ApplicationInformationP1 = {"Application Information" , qp1};
-			String[] ApplicationInformationP2 = {"Application Information" , qp2};
-			String[] ApplicationInformationP3 = {"Application Information" , qp3};
-			String[] ApplicationInformationP4 = {"Application Information" , qp4};
+
+			String[] ApplicationInformationP1 = { "Application Information", qp1 };
+			String[] ApplicationInformationP2 = { "Application Information", qp2 };
+			String[] ApplicationInformationP3 = { "Application Information", qp3 };
+			String[] ApplicationInformationP4 = { "Application Information", qp4 };
 
 			String ID17 = s + "," + "Economic,Application Information,"
 					+ results.getField(ApplicationInformationP1, row);
@@ -940,18 +966,17 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I17 + "\n");
 			out.write(S17 + "\n");
 			out.write(A17 + "\n");
-			
-			String[] ApplicationSessionDataP1 = {"Application Session Data" , qp1};
-			String[] ApplicationSessionDataP2 = {"Application Session Data" , qp2};
-			String[] ApplicationSessionDataP3 = {"Application Session Data" , qp3};
-			String[] ApplicationSessionDataP4 = {"Application Session Data" , qp4};
+
+			String[] ApplicationSessionDataP1 = { "Application Session Data", qp1 };
+			String[] ApplicationSessionDataP2 = { "Application Session Data", qp2 };
+			String[] ApplicationSessionDataP3 = { "Application Session Data", qp3 };
+			String[] ApplicationSessionDataP4 = { "Application Session Data", qp4 };
 
 			String ID18 = s + "," + "Economic,Application Session Data,"
 					+ results.getField(ApplicationSessionDataP1, row);
 			String I18 = s + "," + "Intellectual,Application Session Data,"
 					+ results.getField(ApplicationSessionDataP2, row);
-			String S18 = s + "," + "Death,Application Session Data,"
-					+ results.getField(ApplicationSessionDataP3, row);
+			String S18 = s + "," + "Death,Application Session Data," + results.getField(ApplicationSessionDataP3, row);
 			String A18 = s + "," + "Terrorism,Application Session Data,"
 					+ results.getField(ApplicationSessionDataP4, row);
 			out.write(ID18 + "\n");
@@ -959,24 +984,23 @@ public class RiskSurveyPrettyPrinter {
 			out.write(S18 + "\n");
 			out.write(A18 + "\n");
 
+			// String ID19 = s + "," + "Economic,Application Session Data,"
+			// + results.getField("ApplicationSessionDataP1", row);
+			// String I19 = s + "," + "Intellectual,Application Session Data,"
+			// + results.getField("ApplicationSessionDataP2", row);
+			// String S19 = s + "," + "Death,Application Session Data,"
+			// + results.getField("ApplicationSessionDataP3", row);
+			// String A19 = s + "," + "Terrorism,Application Session Data,"
+			// + results.getField("ApplicationSessionDataP4", row);
+			// out.write(ID19 + "\n");
+			// out.write(I19 + "\n");
+			// out.write(S19 + "\n");
+			// out.write(A19 + "\n");
 
-//			String ID19 = s + "," + "Economic,Application Session Data,"
-//					+ results.getField("ApplicationSessionDataP1", row);
-//			String I19 = s + "," + "Intellectual,Application Session Data,"
-//					+ results.getField("ApplicationSessionDataP2", row);
-//			String S19 = s + "," + "Death,Application Session Data,"
-//					+ results.getField("ApplicationSessionDataP3", row);
-//			String A19 = s + "," + "Terrorism,Application Session Data,"
-//					+ results.getField("ApplicationSessionDataP4", row);
-//			out.write(ID19 + "\n");
-//			out.write(I19 + "\n");
-//			out.write(S19 + "\n");
-//			out.write(A19 + "\n");
-			
-			String[] EmailsP1 = {"Emails" , qp1};
-			String[] EmailsP2 = {"Emails" , qp2};
-			String[] EmailsP3 = {"Emails" , qp3};
-			String[] EmailsP4 = {"Emails" , qp4};
+			String[] EmailsP1 = { "Emails", qp1 };
+			String[] EmailsP2 = { "Emails", qp2 };
+			String[] EmailsP3 = { "Emails", qp3 };
+			String[] EmailsP4 = { "Emails", qp4 };
 
 			String ID21 = s + "," + "Economic,Emails," + results.getField(EmailsP1, row);
 			String I21 = s + "," + "Intellectual,Emails," + results.getField(EmailsP2, row);
@@ -986,11 +1010,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I21 + "\n");
 			out.write(S21 + "\n");
 			out.write(A21 + "\n");
-			
-			String[] ChatHistoryP1 = {"Chat History" , qp1};
-			String[] ChatHistoryP2 = {"Chat History" , qp2};
-			String[] ChatHistoryP3 = {"Chat History" , qp3};
-			String[] ChatHistoryP4 = {"Chat History" , qp4};
+
+			String[] ChatHistoryP1 = { "Chat History", qp1 };
+			String[] ChatHistoryP2 = { "Chat History", qp2 };
+			String[] ChatHistoryP3 = { "Chat History", qp3 };
+			String[] ChatHistoryP4 = { "Chat History", qp4 };
 
 			String ID22 = s + "," + "Economic,Chat History," + results.getField(ChatHistoryP1, row);
 			String I22 = s + "," + "Intellectual,Chat History," + results.getField(ChatHistoryP2, row);
@@ -1000,11 +1024,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I22 + "\n");
 			out.write(S22 + "\n");
 			out.write(A22 + "\n");
-			
-			String[] ContactInformationP1 = {"Contact Information" , qp1};
-			String[] ContactInformationP2 = {"Contact Information" , qp2};
-			String[] ContactInformationP3 = {"Contact Information" , qp3};
-			String[] ContactInformationP4 = {"Contact Information" , qp4};
+
+			String[] ContactInformationP1 = { "Contact Information", qp1 };
+			String[] ContactInformationP2 = { "Contact Information", qp2 };
+			String[] ContactInformationP3 = { "Contact Information", qp3 };
+			String[] ContactInformationP4 = { "Contact Information", qp4 };
 
 			String ID23 = s + "," + "Economic,Contact Information," + results.getField(ContactInformationP1, row);
 			String I23 = s + "," + "Intellectual,Contact Information," + results.getField(ContactInformationP2, row);
@@ -1014,11 +1038,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I23 + "\n");
 			out.write(S23 + "\n");
 			out.write(A23 + "\n");
-			
-			String[] VideoImageFilesP1 = {"Video/Image Files" , qp1};
-			String[] VideoImageFilesP2 = {"Video/Image Files" , qp2};
-			String[] VideoImageFilesP3 = {"Video/Image Files" , qp3};
-			String[] VideoImageFilesP4 = {"Video/Image Files" , qp4};
+
+			String[] VideoImageFilesP1 = { "Video/Image Files", qp1 };
+			String[] VideoImageFilesP2 = { "Video/Image Files", qp2 };
+			String[] VideoImageFilesP3 = { "Video/Image Files", qp3 };
+			String[] VideoImageFilesP4 = { "Video/Image Files", qp4 };
 
 			String ID24 = s + "," + "Economic,Video/Image Files," + results.getField(VideoImageFilesP1, row);
 			String I24 = s + "," + "Intellectual,Video/Image Files," + results.getField(VideoImageFilesP2, row);
@@ -1028,11 +1052,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I24 + "\n");
 			out.write(S24 + "\n");
 			out.write(A24 + "\n");
-			
-			String[] KeywordSearchesP1 = {"Keyword Searches" , qp1};
-			String[] KeywordSearchesP2 = {"Keyword Searches" , qp2};
-			String[] KeywordSearchesP3 = {"Keyword Searches" , qp3};
-			String[] KeywordSearchesP4 = {"Keyword Searches" , qp4};
+
+			String[] KeywordSearchesP1 = { "Keyword Searches", qp1 };
+			String[] KeywordSearchesP2 = { "Keyword Searches", qp2 };
+			String[] KeywordSearchesP3 = { "Keyword Searches", qp3 };
+			String[] KeywordSearchesP4 = { "Keyword Searches", qp4 };
 
 			String ID25 = s + "," + "Economic,Keyword Searches," + results.getField(KeywordSearchesP1, row);
 			String I25 = s + "," + "Intellectual,Keyword Searches," + results.getField(KeywordSearchesP2, row);
@@ -1042,11 +1066,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I25 + "\n");
 			out.write(S25 + "\n");
 			out.write(A25 + "\n");
-			
-			String[] BrowserHistoryP1 = {"Browser History" , qp1};
-			String[] BrowserHistoryP2 = {"Browser History" , qp2};
-			String[] BrowserHistoryP3 = {"Browser History" , qp3};
-			String[] BrowserHistoryP4 = {"Browser History" , qp4};
+
+			String[] BrowserHistoryP1 = { "Browser History", qp1 };
+			String[] BrowserHistoryP2 = { "Browser History", qp2 };
+			String[] BrowserHistoryP3 = { "Browser History", qp3 };
+			String[] BrowserHistoryP4 = { "Browser History", qp4 };
 
 			String ID26 = s + "," + "Economic,Browser History," + results.getField(BrowserHistoryP1, row);
 			String I26 = s + "," + "Intellectual,Browser History," + results.getField(BrowserHistoryP2, row);
@@ -1056,11 +1080,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I26 + "\n");
 			out.write(S26 + "\n");
 			out.write(A26 + "\n");
-			
-			String[] WebsitesVisitedP1 = {"Websites Visited" , qp1};
-			String[] WebsitesVisitedP2 = {"Websites Visited" , qp2};
-			String[] WebsitesVisitedP3 = {"Websites Visited" , qp3};
-			String[] WebsitesVisitedP4 = {"Websites Visited" , qp4};
+
+			String[] WebsitesVisitedP1 = { "Websites Visited", qp1 };
+			String[] WebsitesVisitedP2 = { "Websites Visited", qp2 };
+			String[] WebsitesVisitedP3 = { "Websites Visited", qp3 };
+			String[] WebsitesVisitedP4 = { "Websites Visited", qp4 };
 
 			String ID27 = s + "," + "Economic,Websites Visited," + results.getField(WebsitesVisitedP1, row);
 			String I27 = s + "," + "Intellectual,Websites Visited," + results.getField(WebsitesVisitedP2, row);
@@ -1070,11 +1094,11 @@ public class RiskSurveyPrettyPrinter {
 			out.write(I27 + "\n");
 			out.write(S27 + "\n");
 			out.write(A27 + "\n");
-			
-			String[] KeyloggingDataP1 = {"Keylogging Data" , qp1};
-			String[] KeyloggingDataP2 = {"Keylogging Data" , qp2};
-			String[] KeyloggingDataP3 = {"Keylogging Data" , qp3};
-			String[] KeyloggingDataP4 = {"Keylogging Data" , qp4};
+
+			String[] KeyloggingDataP1 = { "Keylogging Data", qp1 };
+			String[] KeyloggingDataP2 = { "Keylogging Data", qp2 };
+			String[] KeyloggingDataP3 = { "Keylogging Data", qp3 };
+			String[] KeyloggingDataP4 = { "Keylogging Data", qp4 };
 
 			String ID28 = s + "," + "Economic,Keylogging Data," + results.getField(KeyloggingDataP1, row);
 			String I28 = s + "," + "Intellectual,Keylogging Data," + results.getField(KeyloggingDataP2, row);

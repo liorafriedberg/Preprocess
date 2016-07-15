@@ -9,14 +9,14 @@ public class RiskSurveyAnalyzerDriver {
 
 		//RiskSurvey.writeInputFile();
 		
-		CSVFile results=CSVFile.read("C:\\Users\\Daniel Smullen\\Downloads\\20160709212053-SurveyExport.csv");
+		CSVFile results=CSVFile.read("C:\\Users\\dsmullen\\Downloads\\20160712161142-SurveyExport.csv");
 		RiskSurveyPrettyPrinter.analyseDemographics(results);
 		//RiskSurvey3.analyseDiscomfort(results);
 		//RiskSurvey3.analyseBehaviour1(results);
 		//RiskSurvey2.analyseBehaviour2(results);
 		RiskSurveyPrettyPrinter.analyseVignettes(results);
 		//RiskSurvey2.compare();
-		//RiskSurvey3.changeWTS();
+		RiskSurveyPrettyPrinter.changeWTS();
 		System.err.println("End of Processing");		
 	
 	}
