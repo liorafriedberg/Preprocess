@@ -57,7 +57,7 @@ public class RiskSurveyPrettyPrinter {
 			String s = amt.getField("willingness", i);
 			String str = "";
 			if (Integer.parseInt(s) >= 10){
-				str = Integer.toString(Integer.parseInt(s) - 9);
+				s = Integer.toString(Integer.parseInt(s) - 9);
 			}
 			
 			if (s.equals("1"))

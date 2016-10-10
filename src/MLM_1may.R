@@ -28,9 +28,9 @@ levels(dataframe$ethnicity);
 
 #dataframe$risk2=factor(dataframe$risk,c("1 out of 4","1 out of 10","1 out of 100","1 out of 1000"));
 
-M.model = lmer(willingness ~ dataframe$risk2+harm+infoType+cond+ (1| workerID), data=dataframe, REML=FALSE);
+M.model = lmer(willingness ~ dataframe$risk2+infoType+cond+ (1| workerID), data=dataframe, REML=FALSE);
 M1.model = lmer(willingness ~ dataframe$infoType+risk+(1| workerID), data=dataframe, REML=FALSE);
-M2.model = lmer(willingness ~ dataframe$risk2+harm+info2+cond+population+(1| workerID), data=dataframe, REML=FALSE);
+M2.model = lmer(willingness ~ dataframe$risk2+info2+cond+population+(1| workerID), data=dataframe, REML=FALSE);
 #M3.model = lmer(willingness ~ dataframe$risk2+info2+cond+(1| workerID), data=dataframe, REML=FALSE);
 #MI.model = lmer(willingness ~ dataframe$risk2*harm+risk2*infoType+harm*infoType+ (1| workerID), data=dataframe, REML=FALSE);
 #M1.model = lmer(willingness ~ shopping*dataframe$risk2*vagueness+ (1| workerID), data=dataframe, REML=FALSE);
@@ -38,12 +38,12 @@ M.null = lmer(willingness ~   1 + (1 | workerID), data=dataframe, REML=FALSE);
 
 anova(M.null, M1.model);
 #anova(M.model, M2.model);
-#summary(M.model);
+summary(M.model);
 coefs <- data.frame(coef(summary(M1.model)));
 coefs$p.z <- 2 * (1 - pnorm(abs(coefs$t.value)))
 coefs
-#tidy_lmfit <- tidy(M.model);
-#tidy_lmfit;
-#write.csv(tidy_lmfit, "tidy_lmfit.csv")
-#write(coefs,file="MLM-1.csv",append=TRUE)
-#coefs
+tidy_lmfit <- tidy(M.model);
+tidy_lmfit;
+write.csv(tidy_lmfit, "tidy_lmfit.csv")
+write(coefs,file="MLM-1.csv",append=TRUE)
+coefs
